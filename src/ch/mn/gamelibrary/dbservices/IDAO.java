@@ -11,15 +11,15 @@ package ch.mn.gamelibrary.dbservices;
 
 import ch.mn.gamelibrary.model.DBObject;
 
-public interface IDAO {
+public interface IDAO<T extends DBObject> {
 
     void create();
 
-    DBObject read(DBObject dbObject);
+    T read(T dbObject);
 
-    void update(DBObject dbObject);
+    void update(T dbObject);
 
-    void delete(DBObject dbObject);
+    void delete(T dbObject);
 
-    DBObject[] readAll();
+    T[] readAll();
 }
