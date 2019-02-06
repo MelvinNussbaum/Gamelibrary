@@ -9,9 +9,9 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.dbservices;
 
-import ch.mn.gamelibrary.model.DBObject;
+import ch.mn.gamelibrary.model.Publisher;
 
-public class PublisherDAO implements IDAO {
+public class PublisherDAO implements IDAO<Publisher> {
 
     @Override
     public void create() {
@@ -21,28 +21,28 @@ public class PublisherDAO implements IDAO {
     }
 
     @Override
-    public DBObject read(DBObject dbObject) {
+    public Publisher read(Publisher publisher) {
 
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void update(DBObject dbObject) {
+    public void update(Publisher publisher) {
 
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void delete(DBObject dbObject) {
+    public void delete(Publisher publisher) {
 
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public DBObject[] readAll() {
+    public Publisher[] readAll() {
 
         // TODO Auto-generated method stub
         return null;

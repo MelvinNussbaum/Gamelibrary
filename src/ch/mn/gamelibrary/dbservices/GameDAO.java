@@ -9,9 +9,9 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.dbservices;
 
-import ch.mn.gamelibrary.model.DBObject;
+import ch.mn.gamelibrary.model.Game;
 
-public class GameDAO implements IDAO {
+public class GameDAO implements IDAO<Game> {
 
     @Override
     public void create() {
@@ -21,28 +21,28 @@ public class GameDAO implements IDAO {
     }
 
     @Override
-    public DBObject read(DBObject dbObject) {
+    public Game read(Game game) {
 
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void update(DBObject dbObject) {
+    public void update(Game game) {
 
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void delete(DBObject dbObject) {
+    public void delete(Game game) {
 
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public DBObject[] readAll() {
+    public Game[] readAll() {
 
         // TODO Auto-generated method stub
         return null;
