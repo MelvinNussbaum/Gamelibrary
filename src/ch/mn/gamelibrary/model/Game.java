@@ -10,20 +10,9 @@
 package ch.mn.gamelibrary.model;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import ch.mn.gamelibrary.Main;
 
 @Entity
-@Table(schema = Main.DB_SCHEMA)
-public class Game {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+public class Game extends DBObject {
 
     private String title;
 
@@ -39,16 +28,6 @@ public class Game {
 
     public Game() {
         super();
-    }
-
-    public int getId() {
-
-        return id;
-    }
-
-    public void setId(int id) {
-
-        this.id = id;
     }
 
     public String getTitle() {
