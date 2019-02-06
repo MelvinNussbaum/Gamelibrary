@@ -17,9 +17,6 @@ import javax.persistence.Table;
 
 import ch.mn.gamelibrary.Main;
 
-/**
- *
- */
 @Entity
 @Table(schema = Main.DB_SCHEMA)
 public class Game {
