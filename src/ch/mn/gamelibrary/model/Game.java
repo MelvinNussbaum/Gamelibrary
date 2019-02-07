@@ -16,9 +16,9 @@ public class Game extends DBObject {
 
     private String title;
 
-    private Developer developer;
+    private String developer;
 
-    private Publisher publisher;
+    private String publisher;
 
     private float price;
 
@@ -30,6 +30,26 @@ public class Game extends DBObject {
         super();
     }
 
+    public Game(String title, String developer, String publisher, float price, int metaScore, int unitsSold) {
+        super();
+        this.title = title;
+        this.developer = developer;
+        this.publisher = publisher;
+        this.price = price;
+        this.metaScore = metaScore;
+        this.unitsSold = unitsSold;
+    }
+
+    //    public Game(String title, Developer developer, Publisher publisher, float price, int metaScore, int unitsSold) {
+    //        super();
+    //        this.title = title;
+    //        this.developer = developer;
+    //        this.publisher = publisher;
+    //        this.price = price;
+    //        this.metaScore = metaScore;
+    //        this.unitsSold = unitsSold;
+    //    }
+
     public String getTitle() {
 
         return title;
@@ -40,25 +60,25 @@ public class Game extends DBObject {
         this.title = title;
     }
 
-    public Developer getDeveloper() {
-
-        return developer;
-    }
-
-    public void setDeveloper(Developer developer) {
-
-        this.developer = developer;
-    }
-
-    public Publisher getPublisher() {
-
-        return publisher;
-    }
-
-    public void setPublisher(Publisher publisher) {
-
-        this.publisher = publisher;
-    }
+    //    public Developer getDeveloper() {
+    //
+    //        return developer;
+    //    }
+    //
+    //    public void setDeveloper(Developer developer) {
+    //
+    //        this.developer = developer;
+    //    }
+    //
+    //    public Publisher getPublisher() {
+    //
+    //        return publisher;
+    //    }
+    //
+    //    public void setPublisher(Publisher publisher) {
+    //
+    //        this.publisher = publisher;
+    //    }
 
     public float getPrice() {
 
