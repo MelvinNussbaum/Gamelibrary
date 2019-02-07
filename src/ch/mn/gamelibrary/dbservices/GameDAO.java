@@ -9,15 +9,22 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.dbservices;
 
+import javax.persistence.EntityManager;
+
 import ch.mn.gamelibrary.model.Game;
 
-public class GameDAO implements IDAO<Game> {
+public class GameDAO extends AbstractDAO<Game> {
 
     @Override
     public void create() {
 
-        // TODO Auto-generated method stub
+        EntityManager em = this.entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
 
+        em.persist(new Game("title", "developer", "publisher", 0, 0, 0));
+
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Override

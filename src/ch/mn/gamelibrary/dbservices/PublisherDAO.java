@@ -9,15 +9,22 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.dbservices;
 
+import javax.persistence.EntityManager;
+
 import ch.mn.gamelibrary.model.Publisher;
 
-public class PublisherDAO implements IDAO<Publisher> {
+public class PublisherDAO extends AbstractDAO<Publisher> {
 
     @Override
     public void create() {
 
-        // TODO Auto-generated method stub
+        EntityManager em = this.entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
 
+        em.persist(new Publisher("name", "ceo", "hq"));
+
+        em.getTransaction().commit();
+        em.close();
     }
 
     @Override
