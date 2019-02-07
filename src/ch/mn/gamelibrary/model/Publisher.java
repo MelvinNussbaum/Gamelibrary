@@ -24,6 +24,13 @@ public class Publisher extends DBObject {
         super();
     }
 
+    public Publisher(String name, String ceo, String hq) {
+        super();
+        this.name = name;
+        this.ceo = ceo;
+        this.hq = hq;
+    }
+
     public String getName() {
 
         return name;
