@@ -10,10 +10,17 @@
 package ch.mn.gamelibrary.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Game extends DBObject {
+public class Game {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
     private String title;
 
@@ -41,6 +48,16 @@ public class Game extends DBObject {
         this.price = price;
         this.metaScore = metaScore;
         this.unitsSold = unitsSold;
+    }
+
+    public int getId() {
+
+        return id;
+    }
+
+    public void setId(int id) {
+
+        this.id = id;
     }
 
     public String getTitle() {
