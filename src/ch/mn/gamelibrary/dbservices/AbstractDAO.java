@@ -16,9 +16,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import ch.mn.gamelibrary.Main;
-import ch.mn.gamelibrary.model.DBObject;
 
-public abstract class AbstractDAO<T extends DBObject> implements IDAO<T> {
+public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
 
     protected EntityManagerFactory factory;
 
@@ -54,25 +53,24 @@ public abstract class AbstractDAO<T extends DBObject> implements IDAO<T> {
     }
 
     @Override
-    public T retrieve(T dbObject) {
+    public T retrieve(K primaryKey) {
 
-        return em.find(entityClass, dbObject.getId());
+        em = factory.createEntityManager();
+        T dbObject = em.find(entityClass, primaryKey);
+        em.close();
+        return dbObject;
     }
 
     @Override
     public void update(T dbObject) {
 
-        before();
-        delete(dbObject);
-        em.persist(dbObject);
-        after();
     }
 
     @Override
     public void delete(T dbObject) {
 
         before();
-        em.remove(retrieve(dbObject));
+        em.remove(dbObject);
         after();
     }
 
