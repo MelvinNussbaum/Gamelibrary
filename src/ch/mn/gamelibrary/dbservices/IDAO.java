@@ -13,9 +13,9 @@ import ch.mn.gamelibrary.model.DBObject;
 
 public interface IDAO<T extends DBObject> {
 
-    void create();
+    void persist(T dbObject);
 
-    T read(T dbObject);
+    T retrieve(T dbObject);
 
     void update(T dbObject);
 
