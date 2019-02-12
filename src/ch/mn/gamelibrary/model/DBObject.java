@@ -15,7 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class DBObject {
+public class DBObject {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
