@@ -9,9 +9,6 @@
  ******************************************************************************/
 package ch.mn.gamelibrary;
 
-import ch.mn.gamelibrary.dbservices.GameDAO;
-import ch.mn.gamelibrary.dbservices.PublisherDAO;
-
 public class Main {
 
     public static final String DB_SCHEMA = "Gamelibrary";
@@ -20,10 +17,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        GameDAO gameDAO = new GameDAO();
-        PublisherDAO publisherDao = new PublisherDAO();
-        gameDAO.create();
-        publisherDao.create();
     }
 
 }
