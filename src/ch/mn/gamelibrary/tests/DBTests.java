@@ -9,7 +9,6 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.tests;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
@@ -71,14 +70,11 @@ public class DBTests {
 
         em.getTransaction().commit();
 
-        Publisher dbPublisher = pubDAO.retrieve(publisher);
-        Developer dbDeveloper = devDAO.retrieve(developer);
-        Game dbGame = gameDAO.retrieve(game);
+        Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
+        Developer dbDeveloper = devDAO.retrieve(developer.getId());
+        Game dbGame = gameDAO.retrieve(game.getId());
 
-        assertEquals(dbPublisher, publisher);
-        assertEquals(dbDeveloper, developer);
-        assertEquals(dbGame, game);
-
+        //TODO Assert Object comparison
     }
 
     @Test
@@ -90,9 +86,9 @@ public class DBTests {
 
         em.getTransaction().commit();
 
-        Publisher dbPublisher = pubDAO.retrieve(publisher);
-        Developer dbDeveloper = devDAO.retrieve(developer);
-        Game dbGame = gameDAO.retrieve(game);
+        Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
+        Developer dbDeveloper = devDAO.retrieve(developer.getId());
+        Game dbGame = gameDAO.retrieve(game.getId());
 
         assertNull(dbPublisher);
         assertNull(dbDeveloper);

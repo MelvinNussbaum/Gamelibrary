@@ -11,7 +11,7 @@ package ch.mn.gamelibrary.dbservices;
 
 import ch.mn.gamelibrary.model.Game;
 
-public class GameDAO extends AbstractDAO<Game> {
+public class GameDAO extends AbstractDAO<Game, Integer> {
 
     @Override
     public Game[] readAll() {
