@@ -10,6 +10,7 @@
 package ch.mn.gamelibrary.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -22,56 +23,80 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import ch.mn.gamelibrary.Main;
+import ch.mn.gamelibrary.dbservices.DeveloperDAO;
+import ch.mn.gamelibrary.dbservices.GameDAO;
+import ch.mn.gamelibrary.dbservices.PublisherDAO;
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Publisher;
 
 public class DBTests {
 
-    private static EntityManagerFactory managerFactory;
+    private static EntityManagerFactory factory;
 
     private EntityManager em;
+
+    private DeveloperDAO devDAO = new DeveloperDAO();
+
+    private PublisherDAO pubDAO = new PublisherDAO();
+
+    private GameDAO gameDAO = new GameDAO();
+
+    private Developer developer = new Developer("Naughty Dog", "NDCEO", "NDHQ");
+
+    private Publisher publisher = new Publisher("Electronic Arts", "EACEO", "EAHQ");
+
+    private Game game = new Game("The Last of Us", developer, publisher, 69.90f, 95, 17000000);
 
     @BeforeClass
     public static void beforeClass() {
 
-        managerFactory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT);
+        factory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT);
     }
 
     @Before
     public void before() {
 
-        em = managerFactory.createEntityManager();
+        em = factory.createEntityManager();
         em.getTransaction().begin();
 
     }
 
     @Test
-    public void testGameDeveloperPublisherDBTransaction() {
+    public void testGameDeveloperPublisherDBPersist() {
 
-        Developer developer = new Developer("Naughty Dog", "NDCEO", "NDHQ");
-        Publisher publisher = new Publisher("Electronic Arts", "EACEO", "EAHQ");
-        Game game = new Game("The Last of Us", developer, publisher, 69.90f, 95, 17000000);
-
-        em.persist(developer);
-        em.persist(publisher);
-        em.persist(game);
+        devDAO.persist(developer);
+        pubDAO.persist(publisher);
+        gameDAO.persist(game);
 
         em.getTransaction().commit();
 
-        Publisher dbPublisher = em.find(Publisher.class, publisher.getId());
-        Developer dbDeveloper = em.find(Developer.class, developer.getId());
-        Game dbGame = em.find(Game.class, game.getId());
+        Publisher dbPublisher = pubDAO.retrieve(publisher);
+        Developer dbDeveloper = devDAO.retrieve(developer);
+        Game dbGame = gameDAO.retrieve(game);
 
         assertEquals(dbPublisher, publisher);
         assertEquals(dbDeveloper, developer);
         assertEquals(dbGame, game);
 
-        em.getTransaction().begin();
-        em.remove(dbGame);
-        em.remove(dbDeveloper);
-        em.remove(dbPublisher);
+    }
+
+    @Test
+    public void testGameDeveloperPublisherDBRemove() {
+
+        gameDAO.delete(game);
+        devDAO.delete(developer);
+        pubDAO.delete(publisher);
+
         em.getTransaction().commit();
+
+        Publisher dbPublisher = pubDAO.retrieve(publisher);
+        Developer dbDeveloper = devDAO.retrieve(developer);
+        Game dbGame = gameDAO.retrieve(game);
+
+        assertNull(dbPublisher);
+        assertNull(dbDeveloper);
+        assertNull(dbGame);
     }
 
     @After
@@ -83,7 +108,7 @@ public class DBTests {
     @AfterClass
     public static void afterClass() {
 
-        managerFactory.close();
+        factory.close();
     }
 
 }
