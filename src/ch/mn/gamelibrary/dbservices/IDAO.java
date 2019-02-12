@@ -9,13 +9,11 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.dbservices;
 
-import ch.mn.gamelibrary.model.DBObject;
-
-public interface IDAO<T extends DBObject> {
+public interface IDAO<T, K> {
 
     void persist(T dbObject);
 
-    T retrieve(T dbObject);
+    T retrieve(K primaryKey);
 
     void update(T dbObject);
 
