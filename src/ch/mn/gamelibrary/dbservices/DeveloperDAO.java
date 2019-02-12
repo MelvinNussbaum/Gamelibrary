@@ -14,34 +14,6 @@ import ch.mn.gamelibrary.model.Developer;
 public class DeveloperDAO extends AbstractDAO<Developer> {
 
     @Override
-    public void create() {
-
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public Developer read(Developer developer) {
-
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
-    public void update(Developer developer) {
-
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void delete(Developer developer) {
-
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public Developer[] readAll() {
 
         // TODO Auto-generated method stub
