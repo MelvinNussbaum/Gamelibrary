@@ -11,7 +11,7 @@ package ch.mn.gamelibrary.dbservices;
 
 import ch.mn.gamelibrary.model.Developer;
 
-public class DeveloperDAO extends AbstractDAO<Developer> {
+public class DeveloperDAO extends AbstractDAO<Developer, Integer> {
 
     @Override
     public Developer[] readAll() {
