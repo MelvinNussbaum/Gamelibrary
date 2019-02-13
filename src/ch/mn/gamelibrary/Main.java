@@ -9,6 +9,8 @@
  ******************************************************************************/
 package ch.mn.gamelibrary;
 
+import ch.mn.gamelibrary.controller.MainController;
+
 public class Main {
 
     public static final String DB_SCHEMA = "Gamelibrary";
@@ -19,6 +21,10 @@ public class Main {
 
     public static void main(String[] args) {
 
+        MainController controller = new MainController();
+
+        controller.fillDatabaseIfEmpty();
+        controller.printAllGames();
     }
 
 }
