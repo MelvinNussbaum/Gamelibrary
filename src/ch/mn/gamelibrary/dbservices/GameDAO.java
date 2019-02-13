@@ -11,7 +11,7 @@ package ch.mn.gamelibrary.dbservices;
 
 import ch.mn.gamelibrary.model.Game;
 
-public class GameDAO extends AbstractDAO<Game, Integer> {
+public class GameDAO extends AbstractDAO<Game, Long> {
 
     @Override
     public Game[] readAll() {
@@ -19,5 +19,4 @@ public class GameDAO extends AbstractDAO<Game, Integer> {
         // TODO Auto-generated method stub
         return null;
     }
-
 }

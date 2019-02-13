@@ -11,7 +11,7 @@ package ch.mn.gamelibrary.dbservices;
 
 import ch.mn.gamelibrary.model.Publisher;
 
-public class PublisherDAO extends AbstractDAO<Publisher, Integer> {
+public class PublisherDAO extends AbstractDAO<Publisher, Long> {
 
     @Override
     public Publisher[] readAll() {
