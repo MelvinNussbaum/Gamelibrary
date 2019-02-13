@@ -13,11 +13,4 @@ import ch.mn.gamelibrary.model.Publisher;
 
 public class PublisherDAO extends AbstractDAO<Publisher, Long> {
 
-    @Override
-    public Publisher[] readAll() {
-
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

@@ -10,10 +10,14 @@
 package ch.mn.gamelibrary.dbservices;
 
 import java.lang.reflect.ParameterizedType;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 
 import ch.mn.gamelibrary.Main;
 
@@ -79,10 +83,16 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
     }
 
     @Override
-    public T[] readAll() {
+    public List<T> readAll() {
 
-        // TODO Auto-generated method stub
-        return null;
+        em = factory.createEntityManager();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        CriteriaQuery<T> getAll = cq.select(cq.from(entityClass));
+        TypedQuery<T> query = em.createQuery(getAll);
+        List<T> results = query.getResultList();
+        em.close();
+        return results;
     }
 
 }

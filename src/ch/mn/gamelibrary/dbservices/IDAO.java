@@ -9,6 +9,8 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.dbservices;
 
+import java.util.List;
+
 public interface IDAO<T, K> {
 
     void persist(T dbObject);
@@ -19,5 +21,5 @@ public interface IDAO<T, K> {
 
     void delete(T dbObject);
 
-    T[] readAll();
+    List<T> readAll();
 }

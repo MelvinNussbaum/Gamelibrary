@@ -13,11 +13,4 @@ import ch.mn.gamelibrary.model.Developer;
 
 public class DeveloperDAO extends AbstractDAO<Developer, Long> {
 
-    @Override
-    public Developer[] readAll() {
-
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

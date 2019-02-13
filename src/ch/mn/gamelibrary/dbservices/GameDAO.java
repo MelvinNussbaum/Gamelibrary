@@ -13,10 +13,4 @@ import ch.mn.gamelibrary.model.Game;
 
 public class GameDAO extends AbstractDAO<Game, Long> {
 
-    @Override
-    public Game[] readAll() {
-
-        // TODO Auto-generated method stub
-        return null;
-    }
 }
