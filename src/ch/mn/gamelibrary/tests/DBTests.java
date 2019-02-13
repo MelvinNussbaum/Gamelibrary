@@ -9,11 +9,8 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -21,7 +18,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.mn.gamelibrary.Main;
 import ch.mn.gamelibrary.dbservices.DeveloperDAO;
 import ch.mn.gamelibrary.dbservices.GameDAO;
 import ch.mn.gamelibrary.dbservices.PublisherDAO;
@@ -31,60 +27,88 @@ import ch.mn.gamelibrary.model.Publisher;
 
 public class DBTests {
 
-    private static EntityManagerFactory factory;
-
-    private EntityManager em;
-
     private DeveloperDAO devDAO = new DeveloperDAO();
 
     private PublisherDAO pubDAO = new PublisherDAO();
 
     private GameDAO gameDAO = new GameDAO();
 
-    private Developer developer = new Developer("Naughty Dog", "NDCEO", "NDHQ");
+    private Developer developer = new Developer("Naughty Dog", "Andy Gavin, Jason Rubin",
+        "Santa Monica, Kalifornien, Vereinigte Staaten");
 
-    private Publisher publisher = new Publisher("Electronic Arts", "EACEO", "EAHQ");
+    private Publisher publisher = new Publisher("Electronic Arts", "Trip Hawkins",
+        "Redwood City, Kalifornien, Vereinigte Staaten");
 
     private Game game = new Game("The Last of Us", developer, publisher, 69.90f, 95, 17000000);
 
     @BeforeClass
     public static void beforeClass() {
 
-        factory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT);
     }
 
     @Before
     public void before() {
 
-        em = factory.createEntityManager();
-        em.getTransaction().begin();
-
     }
 
     @Test
-    public void testGameDeveloperPublisherDBPersist() {
+    public void testGameDeveloperPublisherDBRetrieve() {
 
         devDAO.persist(developer);
         pubDAO.persist(publisher);
         gameDAO.persist(game);
 
-        em.getTransaction().commit();
-
         Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
         Developer dbDeveloper = devDAO.retrieve(developer.getId());
         Game dbGame = gameDAO.retrieve(game.getId());
 
-        //TODO Assert Object comparison
+        assertEquals(publisher, dbPublisher);
+        assertEquals(developer, dbDeveloper);
+        assertEquals(game, dbGame);
+
+        gameDAO.delete(game);
+        devDAO.delete(developer);
+        pubDAO.delete(publisher);
+    }
+
+    @Test
+    public void testGameDeveloperPublisherDBUpdate() {
+
+        devDAO.persist(developer);
+        pubDAO.persist(publisher);
+        gameDAO.persist(game);
+
+        game.setTitle("TLoU");
+        developer.setName("ND");
+        publisher.setName("EA");
+
+        gameDAO.update(game);
+        devDAO.update(developer);
+        pubDAO.update(publisher);
+
+        Game dbGame = gameDAO.retrieve(game.getId());
+        Developer dbDeveloper = devDAO.retrieve(developer.getId());
+        Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
+
+        assertEquals(game, dbGame);
+        assertEquals(developer, dbDeveloper);
+        assertEquals(publisher, dbPublisher);
+
+        gameDAO.delete(game);
+        devDAO.delete(developer);
+        pubDAO.delete(publisher);
     }
 
     @Test
     public void testGameDeveloperPublisherDBRemove() {
 
+        devDAO.persist(developer);
+        pubDAO.persist(publisher);
+        gameDAO.persist(game);
+
         gameDAO.delete(game);
         devDAO.delete(developer);
         pubDAO.delete(publisher);
-
-        em.getTransaction().commit();
 
         Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
         Developer dbDeveloper = devDAO.retrieve(developer.getId());
@@ -98,13 +122,11 @@ public class DBTests {
     @After
     public void after() {
 
-        em.close();
     }
 
     @AfterClass
     public static void afterClass() {
 
-        factory.close();
     }
 
 }
