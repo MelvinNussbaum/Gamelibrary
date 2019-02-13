@@ -39,7 +39,7 @@ public class DBTests {
     private Publisher publisher = new Publisher("Electronic Arts", "Trip Hawkins",
         "Redwood City, Kalifornien, Vereinigte Staaten");
 
-    private Game game = new Game("The Last of Us", developer, publisher, 69.90f, 95, 17000000);
+    private Game game = new Game("The Last of Us", developer, publisher, 95, 17000000);
 
     @BeforeClass
     public static void beforeClass() {
