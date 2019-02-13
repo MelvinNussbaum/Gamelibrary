@@ -13,7 +13,9 @@ public class Main {
 
     public static final String DB_SCHEMA = "Gamelibrary";
 
-    public static final String PERSISTENCE_UNIT = "PU_Eclipselink";
+    public static final String PERSISTENCE_UNIT_ECLIPSELINK = "PU_Eclipselink";
+
+    public static final String PERSISTENCE_UNIT_HIBERNATE = "PU_Hibernate";
 
     public static void main(String[] args) {
 

@@ -27,18 +27,18 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
 
     public AbstractDAO() {
         super();
-        factory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT);
+        factory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT_ECLIPSELINK);
         ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
         this.entityClass = (Class<T>) genericSuperclass.getActualTypeArguments()[0];
     }
 
-    private void before() {
+    protected void before() {
 
         em = factory.createEntityManager();
         em.getTransaction().begin();
     }
 
-    private void after() {
+    protected void after() {
 
         em.getTransaction().commit();
         em.close();
@@ -64,13 +64,17 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
     @Override
     public void update(T dbObject) {
 
+        before();
+        em.merge(dbObject);
+        after();
     }
 
     @Override
     public void delete(T dbObject) {
 
         before();
-        em.remove(dbObject);
+        T mergedObject = em.merge(dbObject);
+        em.remove(mergedObject);
         after();
     }
 
