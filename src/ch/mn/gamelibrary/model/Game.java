@@ -32,8 +32,6 @@ public class Game implements Serializable {
     @ManyToOne
     private Publisher publisher;
 
-    private double price;
-
     private int metaScore;
 
     private int unitsSold;
@@ -42,13 +40,12 @@ public class Game implements Serializable {
 
     }
 
-    public Game(String title, Developer developer, Publisher publisher, double price, int metaScore, int unitsSold) {
+    public Game(String title, Developer developer, Publisher publisher, int metaScore, int unitsSold) {
         super();
 
         this.title = title;
         this.developer = developer;
         this.publisher = publisher;
-        this.price = price;
         this.metaScore = metaScore;
         this.unitsSold = unitsSold;
     }
@@ -91,16 +88,6 @@ public class Game implements Serializable {
     public void setPublisher(Publisher publisher) {
 
         this.publisher = publisher;
-    }
-
-    public double getPrice() {
-
-        return price;
-    }
-
-    public void setPrice(double price) {
-
-        this.price = price;
     }
 
     public int getMetaScore() {
