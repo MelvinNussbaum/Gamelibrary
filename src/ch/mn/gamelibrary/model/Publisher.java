@@ -9,17 +9,19 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Publisher {
+public class Publisher implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    protected long id;
 
     private String name;
 
@@ -28,7 +30,7 @@ public class Publisher {
     private String hq;
 
     public Publisher() {
-        super();
+
     }
 
     public Publisher(String name, String ceo, String hq) {
@@ -38,12 +40,12 @@ public class Publisher {
         this.hq = hq;
     }
 
-    public int getId() {
+    public long getId() {
 
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
 
         this.id = id;
     }
@@ -78,4 +80,22 @@ public class Publisher {
         this.hq = hq;
     }
 
+    @Override
+    public int hashCode() {
+
+        return (int) (name.hashCode() + id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Publisher))
+            return false;
+        Publisher publisher = (Publisher) obj;
+        return publisher.id == this.id && publisher.name.equals(name);
+    }
 }

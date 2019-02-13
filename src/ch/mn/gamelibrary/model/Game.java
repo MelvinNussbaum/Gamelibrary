@@ -9,6 +9,8 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,11 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Game {
+public class Game implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    protected long id;
 
     private String title;
 
@@ -30,18 +32,19 @@ public class Game {
     @ManyToOne
     private Publisher publisher;
 
-    private float price;
+    private double price;
 
     private int metaScore;
 
     private int unitsSold;
 
     public Game() {
-        super();
+
     }
 
-    public Game(String title, Developer developer, Publisher publisher, float price, int metaScore, int unitsSold) {
+    public Game(String title, Developer developer, Publisher publisher, double price, int metaScore, int unitsSold) {
         super();
+
         this.title = title;
         this.developer = developer;
         this.publisher = publisher;
@@ -50,12 +53,12 @@ public class Game {
         this.unitsSold = unitsSold;
     }
 
-    public int getId() {
+    public long getId() {
 
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
 
         this.id = id;
     }
@@ -90,12 +93,12 @@ public class Game {
         this.publisher = publisher;
     }
 
-    public float getPrice() {
+    public double getPrice() {
 
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
 
         this.price = price;
     }
@@ -118,6 +121,25 @@ public class Game {
     public void setUnitsSold(int unitsSold) {
 
         this.unitsSold = unitsSold;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return (int) (title.hashCode() + id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null)
+            return false;
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Game))
+            return false;
+        Game game = (Game) obj;
+        return game.id == this.id && game.title.equals(title);
     }
 
 }
