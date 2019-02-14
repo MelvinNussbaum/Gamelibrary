@@ -11,8 +11,7 @@
 		<class>ch.mn.gamelibrary.model.Publisher</class>
 
 		<properties>
-			<property name="eclipselink.logging.level" value="FINE" />
-			<property name="eclipselink.ddl-generation" value="create-or-extend" />
+			<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
 			<property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:hsql://localhost:9001/" />
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
 			<property name="javax.persistence.jdbc.user" value="SA" />
