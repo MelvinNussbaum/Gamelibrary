@@ -12,26 +12,35 @@ package ch.mn.gamelibrary.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import ch.mn.gamelibrary.dbservices.DeveloperDAO;
-import ch.mn.gamelibrary.dbservices.GameDAO;
-import ch.mn.gamelibrary.dbservices.PublisherDAO;
+import ch.mn.gamelibrary.Main;
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Publisher;
+import ch.mn.gamelibrary.persistence.DAO.DeveloperDAO;
+import ch.mn.gamelibrary.persistence.DAO.GameDAO;
+import ch.mn.gamelibrary.persistence.DAO.PublisherDAO;
 
 public class DBTests {
 
-    private DeveloperDAO devDAO = new DeveloperDAO();
+    private static EntityManagerFactory factory;
 
-    private PublisherDAO pubDAO = new PublisherDAO();
+    private EntityManager em;
 
-    private GameDAO gameDAO = new GameDAO();
+    private DeveloperDAO devDAO;
+
+    private PublisherDAO pubDAO;
+
+    private GameDAO gameDAO;
 
     private Developer developer = new Developer("Naughty Dog", "Andy Gavin, Jason Rubin",
         "Santa Monica, Kalifornien, Vereinigte Staaten");
@@ -44,20 +53,27 @@ public class DBTests {
     @BeforeClass
     public static void beforeClass() {
 
+        factory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT_ECLIPSELINK);
     }
 
     @Before
     public void before() {
 
+        em = factory.createEntityManager();
+        devDAO = new DeveloperDAO(em);
+        pubDAO = new PublisherDAO(em);
+        gameDAO = new GameDAO(em);
+
+        em.getTransaction().begin();
+        devDAO.persist(developer);
+        pubDAO.persist(publisher);
+        gameDAO.persist(game);
+        em.getTransaction().commit();
     }
 
     @Test
     public void testGameDeveloperPublisherDBRetrieve() {
 
-        devDAO.persist(developer);
-        pubDAO.persist(publisher);
-        gameDAO.persist(game);
-
         Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
         Developer dbDeveloper = devDAO.retrieve(developer.getId());
         Game dbGame = gameDAO.retrieve(game.getId());
@@ -66,25 +82,25 @@ public class DBTests {
         assertEquals(developer, dbDeveloper);
         assertEquals(game, dbGame);
 
+        em.getTransaction().begin();
         gameDAO.delete(game);
         devDAO.delete(developer);
         pubDAO.delete(publisher);
+        em.getTransaction().commit();
     }
 
     @Test
     public void testGameDeveloperPublisherDBUpdate() {
 
-        devDAO.persist(developer);
-        pubDAO.persist(publisher);
-        gameDAO.persist(game);
-
         game.setTitle("TLoU");
         developer.setName("ND");
         publisher.setName("EA");
 
+        em.getTransaction().begin();
         gameDAO.update(game);
         devDAO.update(developer);
         pubDAO.update(publisher);
+        em.getTransaction().commit();
 
         Game dbGame = gameDAO.retrieve(game.getId());
         Developer dbDeveloper = devDAO.retrieve(developer.getId());
@@ -94,21 +110,21 @@ public class DBTests {
         assertEquals(developer, dbDeveloper);
         assertEquals(publisher, dbPublisher);
 
+        em.getTransaction().begin();
         gameDAO.delete(game);
         devDAO.delete(developer);
         pubDAO.delete(publisher);
+        em.getTransaction().commit();
     }
 
     @Test
     public void testGameDeveloperPublisherDBRemove() {
 
-        devDAO.persist(developer);
-        pubDAO.persist(publisher);
-        gameDAO.persist(game);
-
+        em.getTransaction().begin();
         gameDAO.delete(game);
         devDAO.delete(developer);
         pubDAO.delete(publisher);
+        em.getTransaction().commit();
 
         Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
         Developer dbDeveloper = devDAO.retrieve(developer.getId());
@@ -122,6 +138,7 @@ public class DBTests {
     @After
     public void after() {
 
+        em.close();
     }
 
     @AfterClass
