@@ -7,10 +7,16 @@
  * work including confidential and proprietary information of Allianz-Suisse.
  *
  ******************************************************************************/
-package ch.mn.gamelibrary.dbservices;
+package ch.mn.gamelibrary.persistence.DAO;
+
+import javax.persistence.EntityManager;
 
 import ch.mn.gamelibrary.model.Game;
 
 public class GameDAO extends AbstractDAO<Game, Long> {
+
+    public GameDAO(EntityManager em) {
+        super(em);
+    }
 
 }
