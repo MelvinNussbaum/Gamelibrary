@@ -12,17 +12,10 @@ package ch.mn.gamelibrary.model;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Game implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
+public class Game extends DBEntity implements Serializable {
 
     private String title;
 
@@ -48,16 +41,6 @@ public class Game implements Serializable {
         this.publisher = publisher;
         this.metaScore = metaScore;
         this.unitsSold = unitsSold;
-    }
-
-    public long getId() {
-
-        return id;
-    }
-
-    public void setId(long id) {
-
-        this.id = id;
     }
 
     public String getTitle() {
@@ -111,9 +94,19 @@ public class Game implements Serializable {
     }
 
     @Override
+    public String toString() {
+
+        String toString;
+        toString = "\n" + title + "\n------------------------------\nDeveloper: " + developer.getName()
+            + "\nPublisher: " + publisher.getName() + "\nMetaScore: " + metaScore + "/100\nUnits sold: " + unitsSold;
+
+        return toString;
+    }
+
+    @Override
     public int hashCode() {
 
-        return (int) (title.hashCode() + id);
+        return (int) (title.hashCode() + developer.hashCode() + publisher.hashCode() + metaScore + unitsSold + id);
     }
 
     @Override
@@ -121,12 +114,9 @@ public class Game implements Serializable {
 
         if (obj == null)
             return false;
-        if (obj == this)
-            return true;
         if (!(obj instanceof Game))
             return false;
-        Game game = (Game) obj;
-        return game.id == this.id && game.title.equals(title);
+        return hashCode() == obj.hashCode();
     }
 
 }

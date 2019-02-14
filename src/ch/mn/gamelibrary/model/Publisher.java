@@ -12,16 +12,9 @@ package ch.mn.gamelibrary.model;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
-public class Publisher implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
+public class Publisher extends DBEntity implements Serializable {
 
     private String name;
 
@@ -38,16 +31,6 @@ public class Publisher implements Serializable {
         this.name = name;
         this.ceo = ceo;
         this.hq = hq;
-    }
-
-    public long getId() {
-
-        return id;
-    }
-
-    public void setId(long id) {
-
-        this.id = id;
     }
 
     public String getName() {
@@ -81,9 +64,17 @@ public class Publisher implements Serializable {
     }
 
     @Override
+    public String toString() {
+
+        String toString;
+        toString = "\n" + name + "\n------------------------------\nCEO: " + ceo + "\nHeadquarters: " + hq;
+        return toString;
+    }
+
+    @Override
     public int hashCode() {
 
-        return (int) (name.hashCode() + id);
+        return (int) (name.hashCode() + ceo.hashCode() + hq.hashCode() + id);
     }
 
     @Override
@@ -91,11 +82,8 @@ public class Publisher implements Serializable {
 
         if (obj == null)
             return false;
-        if (obj == this)
-            return true;
         if (!(obj instanceof Publisher))
             return false;
-        Publisher publisher = (Publisher) obj;
-        return publisher.id == this.id && publisher.name.equals(name);
+        return this.hashCode() == obj.hashCode();
     }
 }
