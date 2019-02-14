@@ -18,6 +18,7 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 
 import ch.mn.gamelibrary.Main;
+import ch.mn.gamelibrary.model.DBEntity;
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Publisher;
@@ -89,7 +90,7 @@ public class DBService {
         deleteFromTable(Publisher.class);
     }
 
-    public <T extends Object> void deleteFromTable(Class<T> c) {
+    public <T extends DBEntity> void deleteFromTable(Class<T> c) {
 
         createEntityManagerAndDAOs();
 
@@ -101,52 +102,25 @@ public class DBService {
         em.close();
     }
 
-    public <T extends Object> List<T> readAll(Class<T> c) {
+    public <T extends DBEntity> List<T> readAll(Class<T> c) {
 
         createEntityManagerAndDAOs();
 
         CriteriaQuery<T> cq = em.getCriteriaBuilder().createQuery(c);
         CriteriaQuery<T> getAll = cq.select(cq.from(c));
-        return em.createQuery(getAll).getResultList();
+        List<T> results = em.createQuery(getAll).getResultList();
+        em.close();
+        return results;
     }
 
-    public void printAllGames() {
+    public <T extends DBEntity> void printEntities(Class<T> c) {
 
-        createEntityManagerAndDAOs();
-
-        System.out.println("\n--------- ALL GAMES ----------" + "\n------------------------------");
-        for (Game game : readAll(Game.class)) {
-            System.out.println(game);
+        System.out.println(
+            "\n------ " + "ALL " + c.getSimpleName().toUpperCase() + "S --------" + "\n------------------------------");
+        for (T t : readAll(c)) {
+            System.out.println(t);
         }
         System.out.println();
-
-        em.close();
-    }
-
-    public void printAllDevelopers() {
-
-        createEntityManagerAndDAOs();
-
-        System.out.println("\n------- ALL DEVELOPERS -------" + "\n------------------------------");
-        for (Developer dev : readAll(Developer.class)) {
-            System.out.println(dev);
-        }
-        System.out.println();
-
-        em.close();
-    }
-
-    public void printAllPublisher() {
-
-        createEntityManagerAndDAOs();
-
-        System.out.println("\n------- ALL PUBLISHER --------" + "\n------------------------------");
-        for (Publisher pub : readAll(Publisher.class)) {
-            System.out.println(pub);
-        }
-        System.out.println();
-
-        em.close();
     }
 
     private void createEntityManagerAndDAOs() {

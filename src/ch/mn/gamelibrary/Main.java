@@ -9,6 +9,9 @@
  ******************************************************************************/
 package ch.mn.gamelibrary;
 
+import ch.mn.gamelibrary.model.Developer;
+import ch.mn.gamelibrary.model.Game;
+import ch.mn.gamelibrary.model.Publisher;
 import ch.mn.gamelibrary.persistence.service.DBService;
 
 public class Main {
@@ -24,9 +27,9 @@ public class Main {
         DBService controller = new DBService();
 
         controller.fillDatabaseIfEmpty();
-        controller.printAllGames();
-        controller.printAllDevelopers();
-        controller.printAllPublisher();
+        controller.printEntities(Game.class);
+        controller.printEntities(Developer.class);
+        controller.printEntities(Publisher.class);
     }
 
 }
