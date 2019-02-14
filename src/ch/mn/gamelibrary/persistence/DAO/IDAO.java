@@ -7,9 +7,7 @@
  * work including confidential and proprietary information of Allianz-Suisse.
  *
  ******************************************************************************/
-package ch.mn.gamelibrary.dbservices;
-
-import java.util.List;
+package ch.mn.gamelibrary.persistence.DAO;
 
 public interface IDAO<T, K> {
 
@@ -21,5 +19,4 @@ public interface IDAO<T, K> {
 
     void delete(T dbObject);
 
-    List<T> readAll();
 }
