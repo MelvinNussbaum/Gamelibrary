@@ -9,7 +9,7 @@
  ******************************************************************************/
 package ch.mn.gamelibrary;
 
-import ch.mn.gamelibrary.controller.MainController;
+import ch.mn.gamelibrary.persistence.service.DBService;
 
 public class Main {
 
@@ -21,10 +21,12 @@ public class Main {
 
     public static void main(String[] args) {
 
-        MainController controller = new MainController();
+        DBService controller = new DBService();
 
         controller.fillDatabaseIfEmpty();
         controller.printAllGames();
+        controller.printAllDevelopers();
+        controller.printAllPublisher();
     }
 
 }
