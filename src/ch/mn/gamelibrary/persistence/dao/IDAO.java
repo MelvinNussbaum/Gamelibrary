@@ -7,7 +7,7 @@
  * work including confidential and proprietary information of Allianz-Suisse.
  *
  ******************************************************************************/
-package ch.mn.gamelibrary.persistence.DAO;
+package ch.mn.gamelibrary.persistence.dao;
 
 public interface IDAO<T, K> {
 

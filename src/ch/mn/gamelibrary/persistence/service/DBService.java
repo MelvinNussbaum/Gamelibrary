@@ -22,9 +22,9 @@ import ch.mn.gamelibrary.model.DBEntity;
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Publisher;
-import ch.mn.gamelibrary.persistence.DAO.DeveloperDAO;
-import ch.mn.gamelibrary.persistence.DAO.GameDAO;
-import ch.mn.gamelibrary.persistence.DAO.PublisherDAO;
+import ch.mn.gamelibrary.persistence.dao.DeveloperDAO;
+import ch.mn.gamelibrary.persistence.dao.GameDAO;
+import ch.mn.gamelibrary.persistence.dao.PublisherDAO;
 
 public class DBService {
 
