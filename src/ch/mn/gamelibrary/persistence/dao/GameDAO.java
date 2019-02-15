@@ -19,4 +19,11 @@ public class GameDAO extends AbstractDAO<Game, Long> {
         super(em);
     }
 
+    @Override
+    public void delete(Game game) {
+
+        game.removeAllGenres();
+        super.delete(game);
+    }
+
 }
