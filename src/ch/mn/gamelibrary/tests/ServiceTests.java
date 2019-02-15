@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
+import ch.mn.gamelibrary.model.Genre;
 import ch.mn.gamelibrary.model.Publisher;
 import ch.mn.gamelibrary.persistence.service.DBService;
 
@@ -39,12 +40,14 @@ public class ServiceTests {
         assertTrue(service.readAll(Game.class).isEmpty());
         assertTrue(service.readAll(Developer.class).isEmpty());
         assertTrue(service.readAll(Publisher.class).isEmpty());
+        assertTrue(service.readAll(Genre.class).isEmpty());
 
         service.fillDatabaseIfEmpty();
 
         assertFalse(service.readAll(Game.class).isEmpty());
         assertFalse(service.readAll(Developer.class).isEmpty());
         assertFalse(service.readAll(Publisher.class).isEmpty());
+        assertFalse(service.readAll(Genre.class).isEmpty());
     }
 
     @Test
@@ -54,10 +57,12 @@ public class ServiceTests {
         service.deleteFromTable(Game.class);
         service.deleteFromTable(Developer.class);
         service.deleteFromTable(Publisher.class);
+        service.deleteFromTable(Genre.class);
 
         assertTrue(service.readAll(Game.class).isEmpty());
         assertTrue(service.readAll(Developer.class).isEmpty());
         assertTrue(service.readAll(Publisher.class).isEmpty());
+        assertTrue(service.readAll(Genre.class).isEmpty());
 
         service.fillDatabaseIfEmpty();
         service.deleteAllData();
@@ -65,6 +70,17 @@ public class ServiceTests {
         assertTrue(service.readAll(Game.class).isEmpty());
         assertTrue(service.readAll(Developer.class).isEmpty());
         assertTrue(service.readAll(Publisher.class).isEmpty());
+        assertTrue(service.readAll(Genre.class).isEmpty());
+    }
+
+    @Test
+    public void testPersistRetrieveDeleteSingleEntity() {
+
+        Genre genre = new Genre("Genre");
+        service.persist(genre);
+        service.delete(genre);
+        
+        //TODO
     }
 
     @After
