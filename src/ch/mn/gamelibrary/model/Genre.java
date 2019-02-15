@@ -13,9 +13,6 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 
-/**
- *
- */
 @Entity
 public class Genre extends DBEntity implements Serializable {
 
