@@ -10,13 +10,21 @@
 package ch.mn.gamelibrary.model;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+
+import org.hibernate.annotations.NaturalId;
 
 @Entity
 public class Genre extends DBEntity implements Serializable {
 
+    @NaturalId
     private String name;
+
+    @ManyToMany(mappedBy = "genres")
+    private Set<Game> games;
 
     public Genre() {
 
@@ -37,11 +45,21 @@ public class Genre extends DBEntity implements Serializable {
         this.name = name;
     }
 
+    public Set<Game> getGames() {
+
+        return games;
+    }
+
+    public void setGames(Set<Game> games) {
+
+        this.games = games;
+    }
+
     @Override
     public String toString() {
 
         String toString;
-        toString = "\n" + name;
+        toString = name;
         return toString;
     }
 
