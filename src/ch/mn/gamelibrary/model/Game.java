@@ -10,14 +10,23 @@
 package ch.mn.gamelibrary.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
 public class Game extends DBEntity implements Serializable {
 
     private String title;
+
+    @ManyToMany(targetEntity = Genre.class, cascade = {
+        CascadeType.PERSIST, CascadeType.MERGE
+    })
+    private Set<Genre> genres;
 
     @ManyToOne
     private Developer developer;
@@ -33,10 +42,12 @@ public class Game extends DBEntity implements Serializable {
 
     }
 
-    public Game(String title, Developer developer, Publisher publisher, int metaScore, int unitsSold) {
+    public Game(String title, Set<Genre> genres, Developer developer, Publisher publisher, int metaScore,
+        int unitsSold) {
         super();
 
         this.title = title;
+        this.genres = genres;
         this.developer = developer;
         this.publisher = publisher;
         this.metaScore = metaScore;
@@ -51,6 +62,35 @@ public class Game extends DBEntity implements Serializable {
     public void setTitle(String title) {
 
         this.title = title;
+    }
+
+    public void addGenre(Genre genre) {
+
+        this.genres.add(genre);
+        genre.getGames().add(this);
+    }
+
+    public void removeGenre(Genre genre) {
+
+        this.genres.remove(genre);
+        genre.getGames().remove(this);
+    }
+
+    public void removeAllGenres() {
+
+        for (Genre genre : new ArrayList<>(genres)) {
+            removeGenre(genre);
+        }
+    }
+
+    public Set<Genre> getGenres() {
+
+        return genres;
+    }
+
+    public void setGenres(Set<Genre> genres) {
+
+        this.genres = genres;
     }
 
     public Developer getDeveloper() {
@@ -97,8 +137,17 @@ public class Game extends DBEntity implements Serializable {
     public String toString() {
 
         String toString;
-        toString = "\n" + title + "\n------------------------------\nDeveloper: " + developer.getName()
-            + "\nPublisher: " + publisher.getName() + "\nMetaScore: " + metaScore + "/100\nUnits sold: " + unitsSold;
+        StringBuilder genreBuilder = new StringBuilder();
+        for (Genre genre : genres) {
+            if (genreBuilder.length() != 0) {
+                genreBuilder.append(", ");
+            }
+            genreBuilder.append(genre.getName());
+        }
+
+        toString = "\n" + title + "\n------------------------------\nGenres: " + genreBuilder.toString()
+            + "\nDeveloper: " + developer.getName() + "\nPublisher: " + publisher.getName() + "\nMetaScore: "
+            + metaScore + "/100\nUnits sold: " + unitsSold;
 
         return toString;
     }
@@ -106,7 +155,8 @@ public class Game extends DBEntity implements Serializable {
     @Override
     public int hashCode() {
 
-        return (int) (title.hashCode() + developer.hashCode() + publisher.hashCode() + metaScore + unitsSold + id);
+        return (int) (title.hashCode() + genres.hashCode() + developer.hashCode() + publisher.hashCode() + metaScore
+            + unitsSold + id);
     }
 
     @Override
