@@ -9,6 +9,8 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.persistence.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,9 +23,11 @@ import ch.mn.gamelibrary.Main;
 import ch.mn.gamelibrary.model.DBEntity;
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
+import ch.mn.gamelibrary.model.Genre;
 import ch.mn.gamelibrary.model.Publisher;
 import ch.mn.gamelibrary.persistence.dao.DeveloperDAO;
 import ch.mn.gamelibrary.persistence.dao.GameDAO;
+import ch.mn.gamelibrary.persistence.dao.GenreDAO;
 import ch.mn.gamelibrary.persistence.dao.PublisherDAO;
 
 public class DBService {
@@ -33,6 +37,8 @@ public class DBService {
     EntityManager em;
 
     private GameDAO gameDAO;
+
+    private GenreDAO genreDAO;
 
     private DeveloperDAO devDAO;
 
@@ -45,9 +51,9 @@ public class DBService {
 
     public void fillDatabaseIfEmpty() {
 
-        createEntityManagerAndDAOs();
-
-        if (readAll(Game.class).isEmpty() || readAll(Developer.class).isEmpty() || readAll(Publisher.class).isEmpty()) {
+        if (readAll(Game.class).isEmpty() || readAll(Developer.class).isEmpty() || readAll(Publisher.class).isEmpty()
+            || readAll(Genre.class).isEmpty()) {
+            deleteAllData();
 
             Developer naughtyDogDev = new Developer("Naughty Dog", "Evan Wells",
                 "Santa Monica, Kalifornien, Vereinigte Staaten");
@@ -62,11 +68,21 @@ public class DBService {
             Publisher rockstarPub = new Publisher("Rockstar Games", "Dan & Sam Houser",
                 "New York City, New York, Vereinigte Staaten");
 
-            Game tlouGame = new Game("The Last of Us", naughtyDogDev, sonyPub, 95, 17000000);
-            Game uncharted4Game = new Game("Uncharted 4: A Thief’s End", naughtyDogDev, sonyPub, 93, 8700000);
-            Game gtaVGame = new Game("Grand Theft Auto V", rockstarDev, rockstarPub, 97, 100000000);
-            Game fifa19 = new Game("FIFA 19", eaCanDev, eaPub, 83, 5000000);
+            Genre sportGen = new Genre("Sport");
+            Genre actionGen = new Genre("Action");
+            Genre adventureGen = new Genre("Adventure");
+            Genre openWorld = new Genre("Open World");
 
+            Game tlouGame = new Game("The Last of Us", new HashSet<Genre>(Arrays.asList(actionGen, adventureGen)),
+                naughtyDogDev, sonyPub, 95, 17000000);
+            Game uncharted4Game = new Game("Uncharted 4: A Thief’s End",
+                new HashSet<Genre>(Arrays.asList(actionGen, adventureGen)), naughtyDogDev, sonyPub, 93, 8700000);
+            Game gtaVGame = new Game("Grand Theft Auto V", new HashSet<Genre>(Arrays.asList(openWorld)), rockstarDev,
+                rockstarPub, 97, 100000000);
+            Game fifa19 = new Game("FIFA 19", new HashSet<Genre>(Arrays.asList(sportGen)), eaCanDev, eaPub, 83,
+                5000000);
+
+            createEntityManagerAndDAOs();
             em.getTransaction().begin();
             devDAO.persist(naughtyDogDev);
             devDAO.persist(rockstarDev);
@@ -86,6 +102,7 @@ public class DBService {
     public void deleteAllData() {
 
         deleteFromTable(Game.class);
+        deleteFromTable(Genre.class);
         deleteFromTable(Developer.class);
         deleteFromTable(Publisher.class);
     }
@@ -98,6 +115,58 @@ public class DBService {
         CriteriaDelete<T> cd = em.getCriteriaBuilder().createCriteriaDelete(c);
         cd.from(c);
         em.createQuery(cd).executeUpdate();
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public <T extends DBEntity> void delete(T obj) {
+
+        createEntityManagerAndDAOs();
+        em.getTransaction().begin();
+
+        switch (obj.getClass().getSimpleName()) {
+            case "Game":
+                gameDAO.delete((Game) obj);
+                break;
+            case "Developer":
+                devDAO.delete((Developer) obj);
+                break;
+            case "Publisher":
+                pubDAO.delete((Publisher) obj);
+                break;
+            case "Genre":
+                genreDAO.delete((Genre) obj);
+                break;
+            default:
+                break;
+        }
+
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public <T extends DBEntity> void persist(T obj) {
+
+        createEntityManagerAndDAOs();
+        em.getTransaction().begin();
+
+        switch (obj.getClass().getSimpleName()) {
+            case "Game":
+                gameDAO.persist((Game) obj);
+                break;
+            case "Developer":
+                devDAO.persist((Developer) obj);
+                break;
+            case "Publisher":
+                pubDAO.persist((Publisher) obj);
+                break;
+            case "Genre":
+                genreDAO.persist((Genre) obj);
+                break;
+            default:
+                break;
+        }
+
         em.getTransaction().commit();
         em.close();
     }
@@ -127,6 +196,7 @@ public class DBService {
 
         this.em = factory.createEntityManager();
         this.gameDAO = new GameDAO(em);
+        this.genreDAO = new GenreDAO(em);
         this.devDAO = new DeveloperDAO(em);
         this.pubDAO = new PublisherDAO(em);
     }
@@ -140,6 +210,7 @@ public class DBService {
 
         this.em = em;
         this.gameDAO = new GameDAO(em);
+        this.genreDAO = new GenreDAO(em);
         this.devDAO = new DeveloperDAO(em);
         this.pubDAO = new PublisherDAO(em);
     }
