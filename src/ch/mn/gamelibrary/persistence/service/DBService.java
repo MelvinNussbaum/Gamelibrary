@@ -59,7 +59,7 @@ public class DBService {
                 "Santa Monica, Kalifornien, Vereinigte Staaten");
             Developer rockstarDev = new Developer("Rockstar North", "Andrew Semple", "Edinburgh, Schottland");
             Developer eaCanDev = new Developer("EA Vancouver", "Don Mattrick (Founder)",
-                "Burnaby, British Columbia Kanada");
+                "Burnaby, British Columbia, Kanada");
 
             Publisher eaPub = new Publisher("Electronic Arts", "Andrew Wilson",
                 "Redwood City, Kalifornien, Vereinigte Staaten");
