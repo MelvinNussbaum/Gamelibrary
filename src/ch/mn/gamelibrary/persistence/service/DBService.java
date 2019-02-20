@@ -119,58 +119,6 @@ public class DBService {
         em.close();
     }
 
-    public <T extends DBEntity> void delete(T obj) {
-
-        createEntityManagerAndDAOs();
-        em.getTransaction().begin();
-
-        switch (obj.getClass().getSimpleName()) {
-            case "Game":
-                gameDAO.delete((Game) obj);
-                break;
-            case "Developer":
-                devDAO.delete((Developer) obj);
-                break;
-            case "Publisher":
-                pubDAO.delete((Publisher) obj);
-                break;
-            case "Genre":
-                genreDAO.delete((Genre) obj);
-                break;
-            default:
-                break;
-        }
-
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    public <T extends DBEntity> void persist(T obj) {
-
-        createEntityManagerAndDAOs();
-        em.getTransaction().begin();
-
-        switch (obj.getClass().getSimpleName()) {
-            case "Game":
-                gameDAO.persist((Game) obj);
-                break;
-            case "Developer":
-                devDAO.persist((Developer) obj);
-                break;
-            case "Publisher":
-                pubDAO.persist((Publisher) obj);
-                break;
-            case "Genre":
-                genreDAO.persist((Genre) obj);
-                break;
-            default:
-                break;
-        }
-
-        em.getTransaction().commit();
-        em.close();
-    }
-
     public <T extends DBEntity> List<T> readAll(Class<T> c) {
 
         createEntityManagerAndDAOs();
