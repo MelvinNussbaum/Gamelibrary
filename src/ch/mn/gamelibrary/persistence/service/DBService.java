@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [ MainController.java ]
+ * [ DBService.java ]
  *
  * COPYRIGHT (c) 2002 - 2019 by Allianz-Suisse, Zürich, Switzerland.
  * All rights reserved. This material contains unpublished, copyrighted
@@ -9,50 +9,29 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.persistence.service;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-
-import ch.mn.gamelibrary.Main;
-import ch.mn.gamelibrary.model.DBEntity;
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
 import ch.mn.gamelibrary.model.Publisher;
-import ch.mn.gamelibrary.persistence.dao.DeveloperDAO;
-import ch.mn.gamelibrary.persistence.dao.GameDAO;
-import ch.mn.gamelibrary.persistence.dao.GenreDAO;
-import ch.mn.gamelibrary.persistence.dao.PublisherDAO;
 
 public class DBService {
 
-    private EntityManagerFactory factory;
+    private GameService gameService = new GameService();
 
-    EntityManager em;
+    private GenreService genreService = new GenreService();
 
-    private GameDAO gameDAO;
+    private DeveloperService devService = new DeveloperService();
 
-    private GenreDAO genreDAO;
-
-    private DeveloperDAO devDAO;
-
-    private PublisherDAO pubDAO;
+    private PublisherService pubService = new PublisherService();
 
     public DBService() {
-        super();
-        factory = Persistence.createEntityManagerFactory(Main.PERSISTENCE_UNIT_ECLIPSELINK);
+        // TODO Auto-generated constructor stub
     }
 
     public void fillDatabaseIfEmpty() {
 
-        if (readAll(Game.class).isEmpty() || readAll(Developer.class).isEmpty() || readAll(Publisher.class).isEmpty()
-            || readAll(Genre.class).isEmpty()) {
+        if (gameService.readAll().isEmpty() || devService.readAll().isEmpty() || pubService.readAll().isEmpty()
+            || genreService.readAll().isEmpty()) {
             deleteAllData();
 
             Developer naughtyDogDev = new Developer("Naughty Dog", "Evan Wells",
@@ -73,94 +52,29 @@ public class DBService {
             Genre adventureGen = new Genre("Adventure");
             Genre openWorld = new Genre("Open World");
 
-            Game tlouGame = new Game("The Last of Us", new HashSet<Genre>(Arrays.asList(actionGen, adventureGen)),
-                naughtyDogDev, sonyPub, 95, 17000000);
-            Game uncharted4Game = new Game("Uncharted 4: A Thief’s End",
-                new HashSet<Genre>(Arrays.asList(actionGen, adventureGen)), naughtyDogDev, sonyPub, 93, 8700000);
-            Game gtaVGame = new Game("Grand Theft Auto V", new HashSet<Genre>(Arrays.asList(openWorld)), rockstarDev,
-                rockstarPub, 97, 100000000);
-            Game fifa19 = new Game("FIFA 19", new HashSet<Genre>(Arrays.asList(sportGen)), eaCanDev, eaPub, 83,
-                5000000);
+            Game tlouGame = new Game("The Last of Us", naughtyDogDev, sonyPub, 95, 17000000, actionGen, adventureGen);
+            Game uncharted4Game = new Game("Uncharted 4: A Thief’s End", naughtyDogDev, sonyPub, 93, 8700000, actionGen,
+                adventureGen);
+            Game gtaVGame = new Game("Grand Theft Auto V", rockstarDev, rockstarPub, 97, 100000000, openWorld);
+            Game fifa19 = new Game("FIFA 19", eaCanDev, eaPub, 83, 5000000, sportGen);
 
-            createEntityManagerAndDAOs();
-            em.getTransaction().begin();
-            devDAO.persist(naughtyDogDev);
-            devDAO.persist(rockstarDev);
-            devDAO.persist(eaCanDev);
-            pubDAO.persist(eaPub);
-            pubDAO.persist(sonyPub);
-            pubDAO.persist(rockstarPub);
-            gameDAO.persist(tlouGame);
-            gameDAO.persist(uncharted4Game);
-            gameDAO.persist(gtaVGame);
-            gameDAO.persist(fifa19);
-            em.getTransaction().commit();
-            em.close();
+            gameService.varPersist(tlouGame, uncharted4Game, gtaVGame, fifa19);
         }
+    }
+
+    public void printAllEntities() {
+
+        gameService.printEntities();
+        devService.printEntities();
+        pubService.printEntities();
+        genreService.printEntities();
     }
 
     public void deleteAllData() {
 
-        deleteFromTable(Game.class);
-        deleteFromTable(Genre.class);
-        deleteFromTable(Developer.class);
-        deleteFromTable(Publisher.class);
+        gameService.deleteAll();
+        genreService.deleteAll();
+        devService.deleteAll();
+        pubService.deleteAll();
     }
-
-    public <T extends DBEntity> void deleteFromTable(Class<T> c) {
-
-        createEntityManagerAndDAOs();
-
-        em.getTransaction().begin();
-        CriteriaDelete<T> cd = em.getCriteriaBuilder().createCriteriaDelete(c);
-        cd.from(c);
-        em.createQuery(cd).executeUpdate();
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    public <T extends DBEntity> List<T> readAll(Class<T> c) {
-
-        createEntityManagerAndDAOs();
-
-        CriteriaQuery<T> cq = em.getCriteriaBuilder().createQuery(c);
-        CriteriaQuery<T> getAll = cq.select(cq.from(c));
-        List<T> results = em.createQuery(getAll).getResultList();
-        em.close();
-        return results;
-    }
-
-    public <T extends DBEntity> void printEntities(Class<T> c) {
-
-        System.out.println(
-            "\n------ " + "ALL " + c.getSimpleName().toUpperCase() + "S --------" + "\n------------------------------");
-        for (T t : readAll(c)) {
-            System.out.println(t);
-        }
-        System.out.println();
-    }
-
-    private void createEntityManagerAndDAOs() {
-
-        this.em = factory.createEntityManager();
-        this.gameDAO = new GameDAO(em);
-        this.genreDAO = new GenreDAO(em);
-        this.devDAO = new DeveloperDAO(em);
-        this.pubDAO = new PublisherDAO(em);
-    }
-
-    public EntityManager getEm() {
-
-        return em;
-    }
-
-    public void setEm(EntityManager em) {
-
-        this.em = em;
-        this.gameDAO = new GameDAO(em);
-        this.genreDAO = new GenreDAO(em);
-        this.devDAO = new DeveloperDAO(em);
-        this.pubDAO = new PublisherDAO(em);
-    }
-
 }
