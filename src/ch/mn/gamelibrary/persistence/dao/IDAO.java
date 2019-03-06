@@ -9,11 +9,13 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.persistence.dao;
 
-public interface IDAO<T, K> {
+import ch.mn.gamelibrary.model.DBEntity;
+
+public interface IDAO<T extends DBEntity> {
 
     void persist(T dbObject);
 
-    T retrieve(K primaryKey);
+    T retrieve(T dbObject);
 
     void update(T dbObject);
 

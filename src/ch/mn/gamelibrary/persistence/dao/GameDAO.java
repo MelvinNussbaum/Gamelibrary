@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 
 import ch.mn.gamelibrary.model.Game;
 
-public class GameDAO extends AbstractDAO<Game, Long> {
+public class GameDAO extends AbstractDAO<Game> {
 
     public GameDAO(EntityManager em) {
         super(em);

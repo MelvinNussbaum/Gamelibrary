@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 
 import ch.mn.gamelibrary.model.Publisher;
 
-public class PublisherDAO extends AbstractDAO<Publisher, Long> {
+public class PublisherDAO extends AbstractDAO<Publisher> {
 
     public PublisherDAO(EntityManager em) {
         super(em);
