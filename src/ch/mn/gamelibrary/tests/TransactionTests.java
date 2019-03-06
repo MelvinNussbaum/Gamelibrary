@@ -12,9 +12,6 @@ package ch.mn.gamelibrary.tests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -35,7 +32,7 @@ import ch.mn.gamelibrary.persistence.dao.GameDAO;
 import ch.mn.gamelibrary.persistence.dao.GenreDAO;
 import ch.mn.gamelibrary.persistence.dao.PublisherDAO;
 
-public class DBTests {
+public class TransactionTests {
 
     private static EntityManagerFactory factory;
 
@@ -59,8 +56,9 @@ public class DBTests {
 
     private Genre adventureGen = new Genre("Adventure");
 
-    private Game game = new Game("The Last of Us", new HashSet<Genre>(Arrays.asList(actionGen, adventureGen)),
-        developer, publisher, 95, 17000000);
+    private Game game1 = new Game("Game1", developer, publisher, 95, 17000000, actionGen, adventureGen);
+
+    private Game game2 = new Game("Game2", developer, publisher, 0, 0, actionGen, adventureGen);
 
     @BeforeClass
     public static void beforeClass() {
@@ -78,27 +76,29 @@ public class DBTests {
         gameDAO = new GameDAO(em);
 
         em.getTransaction().begin();
-        devDAO.persist(developer);
-        pubDAO.persist(publisher);
-        gameDAO.persist(game);
+        gameDAO.persist(game1);
+        gameDAO.persist(game2);
         em.getTransaction().commit();
     }
 
     @Test
     public void testGameDeveloperPublisherDBRetrieve() {
 
-        Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
-        Developer dbDeveloper = devDAO.retrieve(developer.getId());
-        Genre dbGenre = genreDAO.retrieve(actionGen.getId());
-        Game dbGame = gameDAO.retrieve(game.getId());
+        Publisher dbPublisher = pubDAO.retrieve(publisher);
+        Developer dbDeveloper = devDAO.retrieve(developer);
+        Genre dbGenre = genreDAO.retrieve(actionGen);
+        Game dbGame1 = gameDAO.retrieve(game1);
+        Game dbGame2 = gameDAO.retrieve(game2);
 
         assertEquals(publisher, dbPublisher);
         assertEquals(developer, dbDeveloper);
         assertEquals(actionGen, dbGenre);
-        assertEquals(game, dbGame);
+        assertEquals(game1, dbGame1);
+        assertEquals(game2, dbGame2);
 
         em.getTransaction().begin();
-        gameDAO.delete(game);
+        gameDAO.delete(game1);
+        gameDAO.delete(game2);
         genreDAO.delete(actionGen);
         genreDAO.delete(adventureGen);
         devDAO.delete(developer);
@@ -109,30 +109,30 @@ public class DBTests {
     @Test
     public void testGameDeveloperPublisherDBUpdate() {
 
-        game.setTitle("TLoU");
+        game1.setTitle("TLoU");
         actionGen.setName("ACTION");
         developer.setName("ND");
         publisher.setName("EA");
 
         em.getTransaction().begin();
-        gameDAO.update(game);
+        gameDAO.update(game1);
         genreDAO.update(actionGen);
         devDAO.update(developer);
         pubDAO.update(publisher);
         em.getTransaction().commit();
 
-        Game dbGame = gameDAO.retrieve(game.getId());
-        Genre dbGenre = genreDAO.retrieve(actionGen.getId());
-        Developer dbDeveloper = devDAO.retrieve(developer.getId());
-        Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
+        Game dbGame = gameDAO.retrieve(game1);
+        Genre dbGenre = genreDAO.retrieve(actionGen);
+        Developer dbDeveloper = devDAO.retrieve(developer);
+        Publisher dbPublisher = pubDAO.retrieve(publisher);
 
-        assertEquals(game, dbGame);
+        assertEquals(game1, dbGame);
         assertEquals(actionGen, dbGenre);
         assertEquals(developer, dbDeveloper);
         assertEquals(publisher, dbPublisher);
 
         em.getTransaction().begin();
-        gameDAO.delete(game);
+        gameDAO.delete(game1);
         genreDAO.delete(actionGen);
         genreDAO.delete(adventureGen);
         devDAO.delete(developer);
@@ -144,17 +144,17 @@ public class DBTests {
     public void testGameDeveloperPublisherDBRemove() {
 
         em.getTransaction().begin();
-        gameDAO.delete(game);
+        gameDAO.delete(game1);
         genreDAO.delete(actionGen);
         genreDAO.delete(adventureGen);
         devDAO.delete(developer);
         pubDAO.delete(publisher);
         em.getTransaction().commit();
 
-        Publisher dbPublisher = pubDAO.retrieve(publisher.getId());
-        Genre dbGenre = genreDAO.retrieve(actionGen.getId());
-        Developer dbDeveloper = devDAO.retrieve(developer.getId());
-        Game dbGame = gameDAO.retrieve(game.getId());
+        Publisher dbPublisher = pubDAO.retrieve(publisher);
+        Genre dbGenre = genreDAO.retrieve(actionGen);
+        Developer dbDeveloper = devDAO.retrieve(developer);
+        Game dbGame = gameDAO.retrieve(game1);
 
         assertNull(dbPublisher);
         assertNull(dbGenre);
@@ -171,6 +171,7 @@ public class DBTests {
     @AfterClass
     public static void afterClass() {
 
+        factory.close();
     }
 
 }
