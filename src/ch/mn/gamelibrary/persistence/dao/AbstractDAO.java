@@ -13,7 +13,9 @@ import java.lang.reflect.ParameterizedType;
 
 import javax.persistence.EntityManager;
 
-public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
+import ch.mn.gamelibrary.model.DBEntity;
+
+public abstract class AbstractDAO<T extends DBEntity> implements IDAO<T> {
 
     protected EntityManager em;
 
@@ -34,9 +36,9 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
     }
 
     @Override
-    public T retrieve(K primaryKey) {
+    public T retrieve(T dbObject) {
 
-        return em.find(entityClass, primaryKey);
+        return em.find(entityClass, dbObject.getId());
     }
 
     @Override
@@ -48,6 +50,6 @@ public abstract class AbstractDAO<T, K> implements IDAO<T, K> {
     @Override
     public void delete(T dbObject) {
 
-        em.remove(em.merge(dbObject));
+        em.remove(dbObject);
     }
 }
