@@ -28,6 +28,7 @@
 		<class>ch.mn.gamelibrary.model.Game</class>
 		<class>ch.mn.gamelibrary.model.Developer</class>
 		<class>ch.mn.gamelibrary.model.Publisher</class>
+		<class>ch.mn.gamelibrary.model.Genre</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbc.JDBCDriver" />
