@@ -11,6 +11,7 @@ package ch.mn.gamelibrary.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -24,14 +25,18 @@ public class Game extends DBEntity implements Serializable {
     private String title;
 
     @ManyToMany(targetEntity = Genre.class, cascade = {
-        CascadeType.PERSIST, CascadeType.MERGE
+        CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH
     })
-    private Set<Genre> genres;
+    private Set<Genre> genres = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = {
+        CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH
+    })
     private Developer developer;
 
-    @ManyToOne
+    @ManyToOne(cascade = {
+        CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH
+    })
     private Publisher publisher;
 
     private int metaScore;
@@ -42,16 +47,14 @@ public class Game extends DBEntity implements Serializable {
 
     }
 
-    public Game(String title, Set<Genre> genres, Developer developer, Publisher publisher, int metaScore,
-        int unitsSold) {
+    public Game(String title, Developer developer, Publisher publisher, int metaScore, int unitsSold, Genre... genres) {
         super();
-
         this.title = title;
-        this.genres = genres;
-        this.developer = developer;
-        this.publisher = publisher;
         this.metaScore = metaScore;
         this.unitsSold = unitsSold;
+        setDeveloper(developer);
+        setPublisher(publisher);
+        setGenres(genres);
     }
 
     public String getTitle() {
@@ -93,6 +96,13 @@ public class Game extends DBEntity implements Serializable {
         this.genres = genres;
     }
 
+    public void setGenres(Genre[] genres) {
+
+        for (Genre genre : genres) {
+            addGenre(genre);
+        }
+    }
+
     public Developer getDeveloper() {
 
         return developer;
@@ -100,6 +110,7 @@ public class Game extends DBEntity implements Serializable {
 
     public void setDeveloper(Developer developer) {
 
+        developer.getDevelopedGames().add(this);
         this.developer = developer;
     }
 
@@ -110,6 +121,7 @@ public class Game extends DBEntity implements Serializable {
 
     public void setPublisher(Publisher publisher) {
 
+        publisher.getPublishedGames().add(this);
         this.publisher = publisher;
     }
 
@@ -155,8 +167,11 @@ public class Game extends DBEntity implements Serializable {
     @Override
     public int hashCode() {
 
-        return (int) (title.hashCode() + genres.hashCode() + developer.hashCode() + publisher.hashCode() + metaScore
-            + unitsSold + id);
+        return (int) (title.hashCode()
+            //  + genres.hashCode()
+            //  + developer.hashCode()
+            //  + publisher.hashCode()
+            + metaScore + unitsSold + id);
     }
 
     @Override
