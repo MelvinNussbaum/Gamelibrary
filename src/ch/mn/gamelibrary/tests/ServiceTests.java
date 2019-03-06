@@ -9,22 +9,33 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.tests;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ch.mn.gamelibrary.model.Developer;
-import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
-import ch.mn.gamelibrary.model.Publisher;
 import ch.mn.gamelibrary.persistence.service.DBService;
+import ch.mn.gamelibrary.persistence.service.DeveloperService;
+import ch.mn.gamelibrary.persistence.service.GameService;
+import ch.mn.gamelibrary.persistence.service.GenreService;
+import ch.mn.gamelibrary.persistence.service.PublisherService;
 
 public class ServiceTests {
 
     DBService service = new DBService();
+
+    GameService gameService = new GameService();
+
+    GenreService genreService = new GenreService();
+
+    DeveloperService devService = new DeveloperService();
+
+    PublisherService pubService = new PublisherService();
 
     @Before
     public void before() {
@@ -37,50 +48,55 @@ public class ServiceTests {
 
         service.deleteAllData();
 
-        assertTrue(service.readAll(Game.class).isEmpty());
-        assertTrue(service.readAll(Developer.class).isEmpty());
-        assertTrue(service.readAll(Publisher.class).isEmpty());
-        assertTrue(service.readAll(Genre.class).isEmpty());
+        assertTrue(gameService.readAll().isEmpty());
+        assertTrue(genreService.readAll().isEmpty());
+        assertTrue(devService.readAll().isEmpty());
+        assertTrue(pubService.readAll().isEmpty());
 
         service.fillDatabaseIfEmpty();
 
-        assertFalse(service.readAll(Game.class).isEmpty());
-        assertFalse(service.readAll(Developer.class).isEmpty());
-        assertFalse(service.readAll(Publisher.class).isEmpty());
-        assertFalse(service.readAll(Genre.class).isEmpty());
+        assertFalse(gameService.readAll().isEmpty());
+        assertFalse(genreService.readAll().isEmpty());
+        assertFalse(devService.readAll().isEmpty());
+        assertFalse(pubService.readAll().isEmpty());
     }
 
     @Test
     public void testDeleteFromEveryTable() {
 
         service.fillDatabaseIfEmpty();
-        service.deleteFromTable(Game.class);
-        service.deleteFromTable(Developer.class);
-        service.deleteFromTable(Publisher.class);
-        service.deleteFromTable(Genre.class);
+        gameService.deleteAll();
+        genreService.deleteAll();
+        devService.deleteAll();
+        pubService.deleteAll();
 
-        assertTrue(service.readAll(Game.class).isEmpty());
-        assertTrue(service.readAll(Developer.class).isEmpty());
-        assertTrue(service.readAll(Publisher.class).isEmpty());
-        assertTrue(service.readAll(Genre.class).isEmpty());
+        assertTrue(gameService.readAll().isEmpty());
+        assertTrue(genreService.readAll().isEmpty());
+        assertTrue(devService.readAll().isEmpty());
+        assertTrue(pubService.readAll().isEmpty());
 
         service.fillDatabaseIfEmpty();
         service.deleteAllData();
 
-        assertTrue(service.readAll(Game.class).isEmpty());
-        assertTrue(service.readAll(Developer.class).isEmpty());
-        assertTrue(service.readAll(Publisher.class).isEmpty());
-        assertTrue(service.readAll(Genre.class).isEmpty());
+        assertTrue(gameService.readAll().isEmpty());
+        assertTrue(genreService.readAll().isEmpty());
+        assertTrue(devService.readAll().isEmpty());
+        assertTrue(pubService.readAll().isEmpty());
     }
 
     @Test
     public void testPersistRetrieveDeleteSingleEntity() {
 
         Genre genre = new Genre("Genre");
-        service.persist(genre);
-        service.delete(genre);
-        
-        //TODO
+        genreService.persist(genre);
+        Genre dbGenre = genreService.read(genre);
+
+        assertEquals(genre, dbGenre);
+
+        genreService.delete(genre);
+        dbGenre = genreService.read(genre);
+
+        assertNull(dbGenre);
     }
 
     @After
