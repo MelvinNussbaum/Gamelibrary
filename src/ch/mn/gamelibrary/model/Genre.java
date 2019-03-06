@@ -10,20 +10,20 @@
 package ch.mn.gamelibrary.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
-
-import org.hibernate.annotations.NaturalId;
 
 @Entity
 public class Genre extends DBEntity implements Serializable {
 
-    @NaturalId
+    @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
+    @ManyToMany(targetEntity = Game.class, mappedBy = "genres")
     private Set<Game> games;
 
     public Genre() {
@@ -33,6 +33,7 @@ public class Genre extends DBEntity implements Serializable {
     public Genre(String name) {
         super();
         this.name = name;
+        this.games = new HashSet<>();
     }
 
     public String getName() {
