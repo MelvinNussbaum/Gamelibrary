@@ -10,8 +10,12 @@
 package ch.mn.gamelibrary.model;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Publisher extends DBEntity implements Serializable {
@@ -22,6 +26,9 @@ public class Publisher extends DBEntity implements Serializable {
 
     private String hq;
 
+    @OneToMany(mappedBy = "publisher", cascade = CascadeType.ALL)
+    private Set<Game> publishedGames;
+
     public Publisher() {
 
     }
@@ -31,6 +38,7 @@ public class Publisher extends DBEntity implements Serializable {
         this.name = name;
         this.ceo = ceo;
         this.hq = hq;
+        this.publishedGames = new HashSet<>();
     }
 
     public String getName() {
@@ -63,6 +71,16 @@ public class Publisher extends DBEntity implements Serializable {
         this.hq = hq;
     }
 
+    public Set<Game> getPublishedGames() {
+
+        return publishedGames;
+    }
+
+    public void setPublishedGames(Set<Game> publishedGames) {
+
+        this.publishedGames = publishedGames;
+    }
+
     @Override
     public String toString() {
 
@@ -74,7 +92,7 @@ public class Publisher extends DBEntity implements Serializable {
     @Override
     public int hashCode() {
 
-        return (int) (name.hashCode() + ceo.hashCode() + hq.hashCode() + id);
+        return (int) (name.hashCode() + ceo.hashCode() + hq.hashCode() + publishedGames.hashCode() + id);
     }
 
     @Override
