@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.mn.gamelibrary.controller.MainViewController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Games">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Add Game" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Settings">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <left>
+      <VBox spacing="5.0" style="-fx-background-color: DIMGRAY;" BorderPane.alignment="CENTER">
+         <children>
+            <ToggleButton mnemonicParsing="false" style="-fx-background-color: none;" text="ToggleButton">
+               <toggleGroup>
+                  <ToggleGroup fx:id="librarymenuTG" />
+               </toggleGroup>
+            </ToggleButton>
+            <ToggleButton mnemonicParsing="false" style="-fx-background-color: none;" text="ToggleButton" toggleGroup="$librarymenuTG" />
+            <ToggleButton mnemonicParsing="false" style="-fx-background-color: none;" text="ToggleButton" toggleGroup="$librarymenuTG" />
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets top="20.0" />
+         </padding></VBox>
+   </left>
+   <right>
+      <VBox prefWidth="200.0" style="-fx-background-color: lightgrey;" BorderPane.alignment="CENTER" />
+   </right>
+   <center>
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+        <content>
+          <AnchorPane style="-fx-background-color: lightgray;">
+               <children>
+                  <FlowPane fx:id="gamesContainer" hgap="7.0" minHeight="400.0" minWidth="400.0" prefWrapLength="420.0" rowValignment="TOP" vgap="10.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </FlowPane>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
