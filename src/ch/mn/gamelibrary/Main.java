@@ -9,9 +9,17 @@
  ******************************************************************************/
 package ch.mn.gamelibrary;
 
-import ch.mn.gamelibrary.persistence.service.DBService;
+import java.io.IOException;
 
-public class Main {
+import ch.mn.gamelibrary.controller.MainViewController;
+import ch.mn.gamelibrary.persistence.service.DBService;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+public class Main extends Application {
 
     public static final String DB_SCHEMA = "Gamelibrary";
 
@@ -25,5 +33,25 @@ public class Main {
 
         service.fillDatabaseIfEmpty();
         service.printAllEntities();
+
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("view/MainView.fxml"));
+
+        Parent root;
+        MainViewController controller;
+        try {
+            root = fxmlLoader.load();
+            controller = fxmlLoader.getController();
+            primaryStage.setScene(new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        primaryStage.show();
     }
 }
