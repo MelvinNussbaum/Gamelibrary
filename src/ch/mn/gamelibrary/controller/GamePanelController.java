@@ -10,6 +10,7 @@
 package ch.mn.gamelibrary.controller;
 
 import java.io.ByteArrayInputStream;
+import java.util.Observable;
 
 import ch.mn.gamelibrary.model.Game;
 import javafx.event.EventHandler;
@@ -20,11 +21,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
-public class GamePanelController implements EventHandler<MouseEvent> {
+public class GamePanelController extends Observable implements EventHandler<MouseEvent> {
 
     private Game game;
-
-    private MainViewController mainController;
 
     @FXML
     private ImageView imageView;
@@ -40,11 +39,6 @@ public class GamePanelController implements EventHandler<MouseEvent> {
 
     public GamePanelController() {
 
-    }
-
-    public GamePanelController(MainViewController mainController) {
-        super();
-        this.mainController = mainController;
     }
 
     @FXML
@@ -67,8 +61,8 @@ public class GamePanelController implements EventHandler<MouseEvent> {
     public void handle(MouseEvent event) {
 
         VBox source = (VBox) event.getSource();
-
-        mainController.fillDetailContainer(((Label) source.getChildren().get(1)).getText());
+        setChanged();
+        notifyObservers(((Label) source.getChildren().get(1)).getText());
     }
 
     public Game getGame() {

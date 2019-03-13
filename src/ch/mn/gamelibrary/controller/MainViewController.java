@@ -11,6 +11,8 @@ package ch.mn.gamelibrary.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
@@ -27,11 +29,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
-public class MainViewController {
+public class MainViewController implements Observer {
 
     private GameService service = new GameService();
 
-    private GamePanelController panelController = new GamePanelController(this);
+    private GamePanelController panelController = new GamePanelController();
 
     @FXML
     private BorderPane parent;
@@ -96,6 +98,9 @@ public class MainViewController {
         }
 
         gamesContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty());
+
+        this.panelController.addObserver(this);
+
     }
 
     private void createGamePanel(Game game) {
@@ -146,5 +151,12 @@ public class MainViewController {
         if (!detailContainer.isVisible()) {
             detailContainer.setVisible(true);
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+        o.toString();
+        fillDetailContainer((String) arg);
     }
 }
