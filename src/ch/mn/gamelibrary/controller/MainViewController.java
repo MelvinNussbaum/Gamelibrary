@@ -19,6 +19,7 @@ import ch.mn.gamelibrary.utils.NumberFormat;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,6 +35,9 @@ public class MainViewController {
 
     @FXML
     private BorderPane parent;
+
+    @FXML
+    private MenuItem addGameMenuItem;
 
     @FXML
     private ScrollPane scrollPane;
@@ -82,6 +86,10 @@ public class MainViewController {
 
     @FXML
     private void initialize() {
+
+        addGameMenuItem.setOnAction(ae -> {
+
+        });
 
         for (Game game : service.readAll()) {
             createGamePanel(game);
