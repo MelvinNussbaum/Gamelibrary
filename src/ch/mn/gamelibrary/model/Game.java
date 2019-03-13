@@ -22,8 +22,6 @@ import javax.persistence.ManyToOne;
 @Entity
 public class Game extends DBEntity implements Serializable {
 
-    private String title;
-
     @ManyToMany(targetEntity = Genre.class, cascade = {
         CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH
     })
@@ -43,28 +41,21 @@ public class Game extends DBEntity implements Serializable {
 
     private int unitsSold;
 
+    private byte[] cover;
+
     public Game() {
 
     }
 
-    public Game(String title, Developer developer, Publisher publisher, int metaScore, int unitsSold, Genre... genres) {
-        super();
-        this.title = title;
+    public Game(String name, Developer developer, Publisher publisher, int metaScore, int unitsSold, byte[] cover,
+        Genre... genres) {
+        super(name);
         this.metaScore = metaScore;
         this.unitsSold = unitsSold;
+        this.cover = cover;
         setDeveloper(developer);
         setPublisher(publisher);
         setGenres(genres);
-    }
-
-    public String getTitle() {
-
-        return title;
-    }
-
-    public void setTitle(String title) {
-
-        this.title = title;
     }
 
     public void addGenre(Genre genre) {
@@ -145,6 +136,16 @@ public class Game extends DBEntity implements Serializable {
         this.unitsSold = unitsSold;
     }
 
+    public byte[] getCover() {
+
+        return cover;
+    }
+
+    public void setCover(byte[] cover) {
+
+        this.cover = cover;
+    }
+
     @Override
     public String toString() {
 
@@ -157,7 +158,7 @@ public class Game extends DBEntity implements Serializable {
             genreBuilder.append(genre.getName());
         }
 
-        toString = "\n" + title + "\n------------------------------\nGenres: " + genreBuilder.toString()
+        toString = "\n" + name + "\n------------------------------\nGenres: " + genreBuilder.toString()
             + "\nDeveloper: " + developer.getName() + "\nPublisher: " + publisher.getName() + "\nMetaScore: "
             + metaScore + "/100\nUnits sold: " + unitsSold;
 
@@ -167,7 +168,7 @@ public class Game extends DBEntity implements Serializable {
     @Override
     public int hashCode() {
 
-        return (int) (title.hashCode()
+        return (int) (name.hashCode()
             //  + genres.hashCode()
             //  + developer.hashCode()
             //  + publisher.hashCode()
