@@ -73,6 +73,12 @@ public abstract class EntityService<T extends DBEntity> implements IEntityServic
     }
 
     @Override
+    public T findByName(String name) throws Exception {
+
+        return readAll().stream().filter(obj -> obj.getName().equals(name)).findFirst().get();
+    }
+
+    @Override
     public void delete(T entity) {
 
         createEntityManagerAndDAO();

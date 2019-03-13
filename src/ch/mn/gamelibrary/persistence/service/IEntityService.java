@@ -21,6 +21,8 @@ public interface IEntityService<T extends DBEntity> {
 
     T read(T entity);
 
+    T findByName(String name) throws Exception;
+
     void delete(T entity);
 
     void deleteAll();
