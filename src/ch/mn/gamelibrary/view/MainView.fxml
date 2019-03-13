@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="parent" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.mn.gamelibrary.controller.MainViewController">
+<BorderPane fx:id="parent" prefHeight="583.0" prefWidth="889.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.mn.gamelibrary.controller.MainViewController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -42,15 +42,12 @@
             <Insets top="20.0" />
          </padding></VBox>
    </left>
-   <right>
-      <VBox prefWidth="200.0" style="-fx-background-color: lightgrey;" BorderPane.alignment="CENTER" />
-   </right>
    <center>
-      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" BorderPane.alignment="CENTER">
         <content>
           <AnchorPane style="-fx-background-color: lightgray;">
                <children>
-                  <FlowPane fx:id="gamesContainer" hgap="7.0" minHeight="400.0" minWidth="400.0" prefWrapLength="420.0" rowValignment="TOP" vgap="10.0">
+                  <FlowPane fx:id="gamesContainer" hgap="7.0" prefWrapLength="600.0" rowValignment="TOP" vgap="10.0">
                      <padding>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
@@ -60,4 +57,131 @@
         </content>
       </ScrollPane>
    </center>
+   <right>
+      <VBox fx:id="detailContainer" prefHeight="200.0" prefWidth="100.0" visible="false" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="detailImageView" fitWidth="202.0" pickOnBounds="true" preserveRatio="true" />
+            <Accordion minHeight="75.0" VBox.vgrow="SOMETIMES">
+              <panes>
+                <TitledPane text="Game">
+                  <content>
+                    <AnchorPane prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0">
+                                 <children>
+                                    <Label fx:id="detailGameTitle" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <Separator>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Separator>
+                                    <Label fx:id="detailGameGenres" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="detailGameMetaScore" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="detailGameUnitsSold" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane expanded="false" text="Publisher">
+                  <content>
+                    <AnchorPane prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefWidth="180.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0">
+                                 <children>
+                                    <Label fx:id="detailPublisherTitle" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                    </Label>
+                                    <Separator>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Separator>
+                                    <Label fx:id="detailPublisherHQ" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="detailPublisherCEO" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane expanded="false" text="Developer">
+                  <content>
+                    <AnchorPane prefWidth="200.0">
+                           <children>
+                              <VBox alignment="TOP_CENTER" prefWidth="180.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0">
+                                 <children>
+                                    <Label fx:id="detailDeveloperTitle" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font name="System Bold" size="22.0" />
+                                       </font>
+                                    </Label>
+                                    <Separator>
+                                       <VBox.margin>
+                                          <Insets bottom="10.0" top="10.0" />
+                                       </VBox.margin>
+                                    </Separator>
+                                    <Label fx:id="detailDeveloperHQ" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="detailDeveloperCEO" alignment="TOP_CENTER" contentDisplay="CENTER" text="Label" textAlignment="CENTER" wrapText="true">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children>
+      </VBox>
+   </right>
 </BorderPane>
