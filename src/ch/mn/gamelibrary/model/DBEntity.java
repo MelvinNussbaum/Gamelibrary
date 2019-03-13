@@ -9,6 +9,7 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.model;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,6 +22,18 @@ public class DBEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
 
+    @Column(unique = true)
+    protected String name;
+
+    public DBEntity() {
+        super();
+    }
+
+    public DBEntity(String name) {
+        super();
+        this.name = name;
+    }
+
     public long getId() {
 
         return id;
@@ -30,4 +43,15 @@ public class DBEntity {
 
         this.id = id;
     }
+
+    public String getName() {
+
+        return name;
+    }
+
+    public void setName(String name) {
+
+        this.name = name;
+    }
+
 }

@@ -20,8 +20,6 @@ import javax.persistence.OneToMany;
 @Entity
 public class Developer extends DBEntity implements Serializable {
 
-    private String name;
-
     private String ceo;
 
     private String hq;
@@ -34,21 +32,10 @@ public class Developer extends DBEntity implements Serializable {
     }
 
     public Developer(String name, String ceo, String hq) {
-        super();
-        this.name = name;
+        super(name);
         this.ceo = ceo;
         this.hq = hq;
         this.developedGames = new HashSet<>();
-    }
-
-    public String getName() {
-
-        return name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
     }
 
     public String getCeo() {

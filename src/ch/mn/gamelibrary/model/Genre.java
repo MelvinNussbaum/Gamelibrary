@@ -13,15 +13,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
 @Entity
 public class Genre extends DBEntity implements Serializable {
-
-    @Column(unique = true)
-    private String name;
 
     @ManyToMany(targetEntity = Game.class, mappedBy = "genres")
     private Set<Game> games;
@@ -31,19 +27,8 @@ public class Genre extends DBEntity implements Serializable {
     }
 
     public Genre(String name) {
-        super();
-        this.name = name;
+        super(name);
         this.games = new HashSet<>();
-    }
-
-    public String getName() {
-
-        return name;
-    }
-
-    public void setName(String name) {
-
-        this.name = name;
     }
 
     public Set<Game> getGames() {
