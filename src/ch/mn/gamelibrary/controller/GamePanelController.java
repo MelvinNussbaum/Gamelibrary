@@ -9,8 +9,9 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.controller;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
-import java.util.Observable;
 
 import ch.mn.gamelibrary.model.Game;
 import javafx.event.EventHandler;
@@ -21,9 +22,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
-public class GamePanelController extends Observable implements EventHandler<MouseEvent> {
+public class GamePanelController implements EventHandler<MouseEvent> {
 
     private Game game;
+
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     @FXML
     private ImageView imageView;
@@ -61,8 +64,20 @@ public class GamePanelController extends Observable implements EventHandler<Mous
     public void handle(MouseEvent event) {
 
         VBox source = (VBox) event.getSource();
-        setChanged();
-        notifyObservers(((Label) source.getChildren().get(1)).getText());
+        support.firePropertyChange("gameTitle", "", ((Label) source.getChildren().get(1)).getText());
+
+        //        setChanged();
+        //        notifyObservers(((Label) source.getChildren().get(1)).getText());
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
+
+        support.addPropertyChangeListener(pcl);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
+
+        support.removePropertyChangeListener(pcl);
     }
 
     public Game getGame() {

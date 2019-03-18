@@ -9,10 +9,10 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.controller;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
@@ -29,7 +29,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
-public class MainViewController implements Observer {
+public class MainViewController implements PropertyChangeListener {
 
     private GameService service = new GameService();
 
@@ -99,8 +99,7 @@ public class MainViewController implements Observer {
 
         gamesContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty());
 
-        this.panelController.addObserver(this);
-
+        panelController.addPropertyChangeListener(this);
     }
 
     private void createGamePanel(Game game) {
@@ -154,8 +153,8 @@ public class MainViewController implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void propertyChange(PropertyChangeEvent evt) {
 
-        fillDetailContainer((String) arg);
+        fillDetailContainer((String) evt.getNewValue());
     }
 }
