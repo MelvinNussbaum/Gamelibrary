@@ -12,14 +12,12 @@ package ch.mn.gamelibrary.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
 import ch.mn.gamelibrary.persistence.service.GameService;
 import ch.mn.gamelibrary.utils.NumberFormat;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -94,27 +92,10 @@ public class MainViewController implements PropertyChangeListener {
         });
 
         for (Game game : service.readAll()) {
-            createGamePanel(game);
+            gamesContainer.getChildren().add(panelController.createPanel(game));
         }
-
         gamesContainer.prefWrapLengthProperty().bind(scrollPane.widthProperty());
-
         panelController.addPropertyChangeListener(this);
-    }
-
-    private void createGamePanel(Game game) {
-
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/component/GamePanel.fxml"));
-            fxmlLoader.setController(panelController);
-            VBox gamePanel = fxmlLoader.load();
-            panelController.setGame(game);
-
-            gamePanel.setOnMouseClicked(panelController);
-            gamesContainer.getChildren().add(gamePanel);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void fillDetailContainer(String gameTitle) {

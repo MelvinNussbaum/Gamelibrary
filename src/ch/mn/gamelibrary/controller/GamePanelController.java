@@ -12,10 +12,12 @@ package ch.mn.gamelibrary.controller;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import ch.mn.gamelibrary.model.Game;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,6 +51,23 @@ public class GamePanelController implements EventHandler<MouseEvent> {
 
     }
 
+    public VBox createPanel(Game game) {
+
+        this.game = game;
+        VBox gamePanel = null;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/component/GamePanel.fxml"));
+            fxmlLoader.setController(this);
+            gamePanel = fxmlLoader.load();
+            gamePanel.setOnMouseClicked(this);
+            loadModelIntoView();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return gamePanel;
+    }
+
     private void loadModelIntoView() {
 
         ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
@@ -65,9 +84,6 @@ public class GamePanelController implements EventHandler<MouseEvent> {
 
         VBox source = (VBox) event.getSource();
         support.firePropertyChange("gameTitle", "", ((Label) source.getChildren().get(1)).getText());
-
-        //        setChanged();
-        //        notifyObservers(((Label) source.getChildren().get(1)).getText());
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -88,7 +104,5 @@ public class GamePanelController implements EventHandler<MouseEvent> {
     public void setGame(Game game) {
 
         this.game = game;
-        loadModelIntoView();
     }
-
 }
