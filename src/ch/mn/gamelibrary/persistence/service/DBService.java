@@ -82,7 +82,7 @@ public class DBService {
 
                 ImageIO.write(bUnchartedCover, "jpg", bos);
                 unchartedCover = bos.toByteArray();
-                bos.reset();
+                bos.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
