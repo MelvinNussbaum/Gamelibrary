@@ -12,12 +12,16 @@ package ch.mn.gamelibrary.controller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
 import ch.mn.gamelibrary.persistence.service.GameService;
 import ch.mn.gamelibrary.utils.NumberFormat;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -32,6 +36,8 @@ public class MainViewController implements PropertyChangeListener {
     private GameService service = new GameService();
 
     private GamePanelController panelController = new GamePanelController();
+
+    private AddGameDialogController addGameController = new AddGameDialogController();
 
     @FXML
     private BorderPane parent;
@@ -87,10 +93,6 @@ public class MainViewController implements PropertyChangeListener {
     @FXML
     private void initialize() {
 
-        addGameMenuItem.setOnAction(ae -> {
-
-        });
-
         for (Game game : service.readAll()) {
             gamesContainer.getChildren().add(panelController.createPanel(game));
         }
@@ -104,7 +106,7 @@ public class MainViewController implements PropertyChangeListener {
         try {
             game = service.findByName(gameTitle);
         } catch (Exception e) {
-            e.printStackTrace();
+            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
         }
 
         StringBuilder genreString = new StringBuilder();
@@ -115,8 +117,12 @@ public class MainViewController implements PropertyChangeListener {
             genreString.append(genre.toString());
         }
 
-        ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
-        detailImageView.setImage(new Image(bis));
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
+            detailImageView.setImage(new Image(bis));
+        } catch (NullPointerException e) {
+            detailImageView.setImage(new Image("assets/img/placeholder.png"));
+        }
         detailGameTitle.setText(game.getName());
         detailGameGenres.setText(genreString.toString());
         detailGameMetaScore.setText("MetaScore: " + game.getMetaScore() + "/100");
@@ -130,6 +136,21 @@ public class MainViewController implements PropertyChangeListener {
 
         if (!detailContainer.isVisible()) {
             detailContainer.setVisible(true);
+        }
+    }
+
+    @FXML
+    private void handleAddGameMenuItem() {
+
+        try {
+            Game game = addGameController.openDialog();
+            if (game != null) {
+                service.persist(game);
+                gamesContainer.getChildren().add(panelController.createPanel(game));
+            }
+        } catch (IOException e) {
+            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            e.printStackTrace();
         }
     }
 
