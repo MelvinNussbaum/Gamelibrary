@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <GridPane hgap="10.0" vgap="5.0">
+         <children>
+            <Label text="Name:" />
+            <Label text="Headquarters:" GridPane.rowIndex="1" />
+            <Label text="CEO:" GridPane.rowIndex="2" />
+            <TextField fx:id="nameTF" GridPane.columnIndex="1" />
+            <TextField fx:id="headquartersTF" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="ceoTF" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="ALWAYS" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <Separator />
+   </children>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
