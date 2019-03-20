@@ -20,7 +20,7 @@ import javax.persistence.ManyToMany;
 public class Genre extends DBEntity implements Serializable {
 
     @ManyToMany(targetEntity = Game.class, mappedBy = "genres")
-    private Set<Game> games;
+    private Set<Game> games = new HashSet<>();
 
     public Genre() {
 
@@ -28,7 +28,6 @@ public class Genre extends DBEntity implements Serializable {
 
     public Genre(String name) {
         super(name);
-        this.games = new HashSet<>();
     }
 
     public Set<Game> getGames() {
