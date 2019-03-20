@@ -32,7 +32,7 @@ public abstract class AbstractDAO<T extends DBEntity> implements IDAO<T> {
     @Override
     public void persist(T dbObject) {
 
-        em.persist(dbObject);
+        em.persist(em.merge(dbObject));
     }
 
     @Override
