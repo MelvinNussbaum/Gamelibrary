@@ -64,6 +64,7 @@ public class GamePanelController {
             loadModelIntoView();
         } catch (IOException e) {
             new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            e.printStackTrace();
         }
 
         return gamePanel;
