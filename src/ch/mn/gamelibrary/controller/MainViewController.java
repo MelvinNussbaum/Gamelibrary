@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import ch.mn.gamelibrary.model.Game;
 import ch.mn.gamelibrary.model.Genre;
@@ -102,48 +103,56 @@ public class MainViewController implements PropertyChangeListener {
 
     public void fillDetailContainer(String gameTitle) {
 
-        Game game = null;
-        try {
-            game = service.findByName(gameTitle);
-        } catch (Exception e) {
-            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+        Game game = service.findByName(gameTitle);
+        if (game != null) {
+
+            detailImageView.setImage(prepareCover(game.getCover()));
+            detailGameTitle.setText(game.getName());
+            detailGameGenres.setText(formatGenreString(game.getGenres()));
+            detailGameMetaScore.setText("MetaScore: " + game.getMetaScore() + "/100");
+            detailGameUnitsSold.setText("Units sold: " + NumberFormat.format(game.getUnitsSold()));
+            detailPublisherTitle.setText(game.getPublisher().getName());
+            detailPublisherCEO.setText("CEO: " + game.getPublisher().getCeo());
+            detailPublisherHQ.setText("Headquarters: " + game.getPublisher().getHq());
+            detailDeveloperTitle.setText(game.getDeveloper().getName());
+            detailDeveloperCEO.setText("CEO: " + game.getDeveloper().getCeo());
+            detailDeveloperHQ.setText("Headquarters: " + game.getDeveloper().getHq());
+
+            if (!detailContainer.isVisible()) {
+                detailContainer.setVisible(true);
+            }
         }
+    }
+
+    private String formatGenreString(Set<Genre> genres) {
 
         StringBuilder genreString = new StringBuilder();
-        for (Genre genre : game.getGenres()) {
+        for (Genre genre : genres) {
             if (genreString.length() != 0) {
                 genreString.append(", ");
             }
             genreString.append(genre.toString());
         }
+        return genreString.toString();
+    }
 
-        try {
-            ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
-            detailImageView.setImage(new Image(bis));
-        } catch (NullPointerException e) {
-            detailImageView.setImage(new Image("assets/img/placeholder.png"));
-        }
-        detailGameTitle.setText(game.getName());
-        detailGameGenres.setText(genreString.toString());
-        detailGameMetaScore.setText("MetaScore: " + game.getMetaScore() + "/100");
-        detailGameUnitsSold.setText("Units sold: " + NumberFormat.format(game.getUnitsSold()));
-        detailPublisherTitle.setText(game.getPublisher().getName());
-        detailPublisherCEO.setText("CEO: " + game.getPublisher().getCeo());
-        detailPublisherHQ.setText("Headquarters: " + game.getPublisher().getHq());
-        detailDeveloperTitle.setText(game.getDeveloper().getName());
-        detailDeveloperCEO.setText("CEO: " + game.getDeveloper().getCeo());
-        detailDeveloperHQ.setText("Headquarters: " + game.getDeveloper().getHq());
+    private Image prepareCover(byte[] bytes) {
 
-        if (!detailContainer.isVisible()) {
-            detailContainer.setVisible(true);
+        Image image;
+        if (bytes == null) {
+            return new Image("assets/img/placeholder.png");
+        } else {
+            ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+            return new Image(bis);
         }
     }
 
     @FXML
     private void handleAddGameMenuItem() {
 
+        Game game;
         try {
-            Game game = addGameController.openDialog();
+            game = addGameController.openDialog();
             if (game != null) {
                 service.persist(game);
                 gamesContainer.getChildren().add(panelController.createPanel(game));
@@ -152,11 +161,19 @@ public class MainViewController implements PropertyChangeListener {
             new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
+
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
-        fillDetailContainer((String) evt.getNewValue());
+        switch (evt.getPropertyName()) {
+            case "gameTitle_selection":
+                fillDetailContainer((String) evt.getNewValue());
+                break;
+
+            default:
+                break;
+        }
     }
 }

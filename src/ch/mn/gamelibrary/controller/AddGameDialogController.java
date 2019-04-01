@@ -191,17 +191,19 @@ public class AddGameDialogController {
     @FXML
     private void handleNewPublisher(ActionEvent ea) {
 
+        NewPublisherController pController;
         try {
-            NewPublisherController pController = new NewPublisherController();
+            pController = new NewPublisherController();
             Publisher newPublisher = pController.openDialog();
             if (newPublisher != null) {
                 publisherCB.getItems().add(newPublisher);
                 publisherCB.setValue(newPublisher);
             }
-        } catch (IOException | InstantiationException | IllegalAccessException e) {
-            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
+        } catch (InstantiationException | IllegalAccessException | IOException e) {
+            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
+
     }
 
     @FXML
@@ -215,8 +217,7 @@ public class AddGameDialogController {
                 developerCB.setValue(newDeveloper);
             }
         } catch (IOException | InstantiationException | IllegalAccessException e) {
-            Alert alert = new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK);
-            alert.show();
+            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
             e.printStackTrace();
         }
     }
@@ -237,6 +238,7 @@ public class AddGameDialogController {
 
                 imagePreView.setImage(new Image(file.toURI().toString()));
                 removeFileBtn.setDisable(false);
+
             } catch (IOException e) {
                 new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
                 e.printStackTrace();

@@ -28,8 +28,6 @@ import javafx.scene.layout.VBox;
 
 public class GamePanelController {
 
-    private Game game;
-
     private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     @FXML
@@ -55,13 +53,12 @@ public class GamePanelController {
 
     public VBox createPanel(Game game) {
 
-        this.game = game;
         VBox gamePanel = null;
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/component/GamePanel.fxml"));
             fxmlLoader.setController(this);
             gamePanel = fxmlLoader.load();
-            loadModelIntoView();
+            loadModelIntoView(game);
         } catch (IOException e) {
             new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
             e.printStackTrace();
@@ -70,12 +67,12 @@ public class GamePanelController {
         return gamePanel;
     }
 
-    private void loadModelIntoView() {
+    private void loadModelIntoView(Game game) {
 
-        try {
+        if (game.getCover() != null) {
             ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
             imageView.setImage(new Image(bis));
-        } catch (NullPointerException e) {
+        } else {
             imageView.setImage(new Image("assets/img/placeholder.png"));
         }
 
@@ -89,7 +86,7 @@ public class GamePanelController {
     private void handlePanelClicked(MouseEvent event) {
 
         VBox source = (VBox) event.getSource();
-        support.firePropertyChange("gameTitle", "", ((Label) source.getChildren().get(1)).getText());
+        support.firePropertyChange("gameTitle_selection", "", ((Label) source.getChildren().get(1)).getText());
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
@@ -100,15 +97,5 @@ public class GamePanelController {
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
 
         support.removePropertyChangeListener(pcl);
-    }
-
-    public Game getGame() {
-
-        return game;
-    }
-
-    public void setGame(Game game) {
-
-        this.game = game;
     }
 }
