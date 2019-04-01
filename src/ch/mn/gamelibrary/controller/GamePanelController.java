@@ -9,22 +9,26 @@
  ******************************************************************************/
 package ch.mn.gamelibrary.controller;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import ch.mn.gamelibrary.model.Game;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
-public class GamePanelController implements EventHandler<MouseEvent> {
+public class GamePanelController {
 
-    private Game game;
-
-    private MainViewController mainController;
+    private PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     @FXML
     private ImageView imageView;
@@ -42,20 +46,35 @@ public class GamePanelController implements EventHandler<MouseEvent> {
 
     }
 
-    public GamePanelController(MainViewController mainController) {
-        super();
-        this.mainController = mainController;
-    }
-
     @FXML
     private void initialize() {
 
     }
 
-    private void loadModelIntoView() {
+    public VBox createPanel(Game game) {
 
-        ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
-        imageView.setImage(new Image(bis));
+        VBox gamePanel = null;
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/component/GamePanel.fxml"));
+            fxmlLoader.setController(this);
+            gamePanel = fxmlLoader.load();
+            loadModelIntoView(game);
+        } catch (IOException e) {
+            new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).showAndWait();
+            e.printStackTrace();
+        }
+
+        return gamePanel;
+    }
+
+    private void loadModelIntoView(Game game) {
+
+        if (game.getCover() != null) {
+            ByteArrayInputStream bis = new ByteArrayInputStream(game.getCover());
+            imageView.setImage(new Image(bis));
+        } else {
+            imageView.setImage(new Image("assets/img/placeholder.png"));
+        }
 
         title.setText(game.getName());
         publisher.setText(game.getPublisher().getName());
@@ -63,23 +82,20 @@ public class GamePanelController implements EventHandler<MouseEvent> {
 
     }
 
-    @Override
-    public void handle(MouseEvent event) {
+    @FXML
+    private void handlePanelClicked(MouseEvent event) {
 
         VBox source = (VBox) event.getSource();
-
-        mainController.fillDetailContainer(((Label) source.getChildren().get(1)).getText());
+        support.firePropertyChange("gameTitle_selection", "", ((Label) source.getChildren().get(1)).getText());
     }
 
-    public Game getGame() {
+    public void addPropertyChangeListener(PropertyChangeListener pcl) {
 
-        return game;
+        support.addPropertyChangeListener(pcl);
     }
 
-    public void setGame(Game game) {
+    public void removePropertyChangeListener(PropertyChangeListener pcl) {
 
-        this.game = game;
-        loadModelIntoView();
+        support.removePropertyChangeListener(pcl);
     }
-
 }

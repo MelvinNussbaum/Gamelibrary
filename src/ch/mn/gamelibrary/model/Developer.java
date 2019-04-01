@@ -18,44 +18,17 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Developer extends DBEntity implements Serializable {
-
-    private String ceo;
-
-    private String hq;
+public class Developer extends Producer implements Serializable {
 
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL)
-    private Set<Game> developedGames;
+    private Set<Game> developedGames = new HashSet<>();
 
     public Developer() {
 
     }
 
     public Developer(String name, String ceo, String hq) {
-        super(name);
-        this.ceo = ceo;
-        this.hq = hq;
-        this.developedGames = new HashSet<>();
-    }
-
-    public String getCeo() {
-
-        return ceo;
-    }
-
-    public void setCeo(String ceo) {
-
-        this.ceo = ceo;
-    }
-
-    public String getHq() {
-
-        return hq;
-    }
-
-    public void setHq(String hq) {
-
-        this.hq = hq;
+        super(name, ceo, hq);
     }
 
     public Set<Game> getDevelopedGames() {
@@ -69,17 +42,9 @@ public class Developer extends DBEntity implements Serializable {
     }
 
     @Override
-    public String toString() {
-
-        String toString;
-        toString = "\n" + name + "\n------------------------------\nCEO: " + ceo + "\nHeadquarters: " + hq;
-        return toString;
-    }
-
-    @Override
     public int hashCode() {
 
-        return (int) (name.hashCode() + ceo.hashCode() + hq.hashCode() + developedGames.hashCode() + id);
+        return super.hashCode() + developedGames.hashCode();
     }
 
     @Override

@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * [ Genre.java ]
+ * [ Producer.java ]
  *
  * COPYRIGHT (c) 2002 - 2019 by Allianz-Suisse, Zürich, Switzerland.
  * All rights reserved. This material contains unpublished, copyrighted
@@ -10,48 +10,56 @@
 package ch.mn.gamelibrary.model;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.MappedSuperclass;
 
-@Entity
-public class Genre extends DBEntity implements Serializable {
+@MappedSuperclass
+public class Producer extends DBEntity implements Serializable {
 
-    @ManyToMany(targetEntity = Game.class, mappedBy = "genres")
-    private Set<Game> games = new HashSet<>();
+    protected String ceo;
 
-    public Genre() {
+    protected String hq;
 
+    public Producer() {
+        super();
     }
 
-    public Genre(String name) {
+    public Producer(String name, String ceo, String hq) {
         super(name);
+        this.ceo = ceo;
+        this.hq = hq;
     }
 
-    public Set<Game> getGames() {
+    public String getCeo() {
 
-        return games;
+        return ceo;
     }
 
-    public void setGames(Set<Game> games) {
+    public void setCeo(String ceo) {
 
-        this.games = games;
+        this.ceo = ceo;
+    }
+
+    public String getHq() {
+
+        return hq;
+    }
+
+    public void setHq(String hq) {
+
+        this.hq = hq;
     }
 
     @Override
     public String toString() {
 
-        String toString;
-        toString = name;
-        return toString;
+        return this.name;
     }
 
     @Override
     public int hashCode() {
 
-        return (int) (name.hashCode() + id);
+        return (int) (name.hashCode() + ceo.hashCode() + hq.hashCode() + id);
     }
 
     @Override
@@ -59,9 +67,8 @@ public class Genre extends DBEntity implements Serializable {
 
         if (obj == null)
             return false;
-        if (!(obj instanceof Genre))
+        if (!(obj instanceof Producer))
             return false;
         return this.hashCode() == obj.hashCode();
     }
-
 }
