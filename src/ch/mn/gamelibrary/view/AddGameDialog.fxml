@@ -58,10 +58,13 @@
       <Separator />
       <HBox>
          <children>
-            <VBox>
+            <VBox spacing="10.0">
                <children>
                   <Label text="Genres" />
-                  <FlowPane fx:id="GenresPane" columnHalignment="CENTER" prefWrapLength="150.0" />
+                  <FlowPane fx:id="genresPane" columnHalignment="CENTER" hgap="5.0" prefWrapLength="150.0" vgap="5.0">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin></FlowPane>
                </children>
             </VBox>
             <Separator orientation="VERTICAL">

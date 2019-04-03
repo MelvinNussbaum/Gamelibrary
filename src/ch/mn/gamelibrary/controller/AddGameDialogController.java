@@ -13,14 +13,20 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
 import ch.mn.gamelibrary.model.Developer;
 import ch.mn.gamelibrary.model.Game;
+import ch.mn.gamelibrary.model.Genre;
 import ch.mn.gamelibrary.model.Publisher;
 import ch.mn.gamelibrary.persistence.service.DeveloperService;
+import ch.mn.gamelibrary.persistence.service.GenreService;
 import ch.mn.gamelibrary.persistence.service.PublisherService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -36,6 +42,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
@@ -47,9 +54,17 @@ public class AddGameDialogController {
 
     private Game newGame = new Game();
 
+    private Dialog<Game> dialog;
+
+    private ButtonType addGameButtonType;
+
+    private Set<ToggleButton> buttonGroup = new HashSet<>();
+
     private PublisherService pubService = new PublisherService();
 
     private DeveloperService devService = new DeveloperService();
+
+    private GenreService genreService = new GenreService();
 
     private boolean titleValidated;
 
@@ -101,35 +116,64 @@ public class AddGameDialogController {
 
     public Game openDialog() throws IOException {
 
+        loadDialog();
+        loadProducers();
+        addDialogButtons();
+        addGenreButtons();
+        validate();
+
+        return prepareResult();
+    }
+
+    private void loadDialog() throws IOException {
+
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../view/AddGameDialog.fxml"));
         fxmlLoader.setController(this);
         VBox dialogGrid = fxmlLoader.load();
 
-        Dialog<Game> dialog = new Dialog<>();
+        this.dialog = new Dialog<>();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setResizable(false);
         dialog.setTitle("Add New Game");
         dialog.getDialogPane().setContent(dialogGrid);
+    }
+
+    private void loadProducers() {
 
         publisherCB.getItems().addAll(pubService.readAll());
         developerCB.getItems().addAll(devService.readAll());
+    }
 
-        ButtonType addGameButtonType = new ButtonType("Add Game", ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(addGameButtonType, ButtonType.CANCEL);
+    private void addDialogButtons() {
+
+        this.addGameButtonType = new ButtonType("Add Game", ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().add(0, addGameButtonType);
+        dialog.getDialogPane().getButtonTypes().add(1, ButtonType.CANCEL);
 
         Node confirmButton = dialog.getDialogPane().lookupButton(addGameButtonType);
         confirmButton.setDisable(true);
+    }
 
-        validate(confirmButton);
+    private void addGenreButtons() {
+
+        for (Genre genre : genreService.readAll()) {
+            ToggleButton but = new ToggleButton(genre.getName());
+            buttonGroup.add(but);
+            genresPane.getChildren().add(but);
+        }
+    }
+
+    private Game prepareResult() {
 
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == addGameButtonType) {
+            if (dialogButton == this.addGameButtonType) {
 
                 newGame.setName(titleTF.getText());
                 newGame.setPublisher(publisherCB.getValue());
                 newGame.setDeveloper(developerCB.getValue());
                 newGame.setUnitsSold(Integer.parseInt(unitsSoldTF.getText()));
                 newGame.setMetaScore(Integer.parseInt(metaScoreTF.getText()));
+                newGame.setGenres(extractGenres());
                 return newGame;
             }
             return null;
@@ -142,7 +186,18 @@ public class AddGameDialogController {
         return null;
     }
 
-    private void validate(Node confirmButton) {
+    private Genre[] extractGenres() {
+
+        List<Genre> genreList = new ArrayList<>();
+        for (ToggleButton toggleButton : buttonGroup) {
+            if (toggleButton.isSelected()) {
+                genreList.add(genreService.findByName(toggleButton.getText()));
+            }
+        }
+        return genreList.toArray(new Genre[genreList.size() - 1]);
+    }
+
+    private void validate() {
 
         BooleanProperty validationChanged = new SimpleBooleanProperty(false);
         titleValidated = false;
@@ -182,7 +237,7 @@ public class AddGameDialogController {
         });
 
         validationChanged.addListener((observable, oldValue, newVal) -> {
-            confirmButton.setDisable(
+            this.dialog.getDialogPane().lookupButton(this.addGameButtonType).setDisable(
                 !(titleValidated && pubValidated && devValidated && unitsSoldValidated && metaScoreValidated));
             validationChanged.set(false);
         });
